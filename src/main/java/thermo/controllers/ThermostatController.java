@@ -1,11 +1,10 @@
-package thermo;
+package thermo.controllers;
 
 // import java.net.URI;
 // import java.util.ArrayList;
 
 // import com.google.gson.Gson;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 // import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,14 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 // import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import thermo.Thermoshare;
+import thermo.models.Thermostat;
+
 @RestController
 @RequestMapping(path ="/thermostats")
 public class ThermostatController {
-    @Autowired
+    Thermostat thermo = Thermoshare.getInstance();
+
 
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getThermostats() {
-        return new ResponseEntity<String>("returning the thermostat objects here", HttpStatus.OK);
+        return new ResponseEntity<String>("returning the thermostat objects here" + thermo.getCurrentTemp(), HttpStatus.OK);
     }
 
     // @GetMapping(path="/{id}", produces = "application/json")
