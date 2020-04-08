@@ -1,5 +1,8 @@
 package thermo.controllers;
 
+import java.util.List;
+
+
 // import java.net.URI;
 // import java.util.ArrayList;
 
@@ -16,19 +19,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 // import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.apache.commons.lang3.StringUtils;
 
-import thermo.Thermoshare;
+import thermo.ThermostatDAO;
 import thermo.models.Thermostat;
+import thermo.database.*;
 
 @RestController
 @RequestMapping(path ="/thermostats")
 public class ThermostatController {
-    Thermostat thermo = Thermoshare.getInstance();
+    Thermostat thermo = ThermostatDAO.getInstance();
 
-
+    // Get all thermostat objects
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getThermostats() {
-        return new ResponseEntity<String>("returning the thermostat objects here" + thermo.getCurrentTemp(), HttpStatus.OK);
+        String response = "{'data':[";
+        Pgdatabase test = new Pgdatabase();
+
+        List<Thermostat> tList = test.getAllThermostats();
+
+        for (Thermostat temp : tList) {
+            response += temp;
+        }
+        // Remove the comma from the last object converted to string
+        response = StringUtils.chop(response);
+        // End of payload
+        response += "]}";
+        return new ResponseEntity<String>(response, HttpStatus.OK);
     }
 
     // @GetMapping(path="/{id}", produces = "application/json")

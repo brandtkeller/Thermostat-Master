@@ -1,20 +1,36 @@
 package thermo.models;
 
+
 public class Thermostat {
+    private int id;
     private int currentTemp;
     private int setTemp;
     private int threshold;
     private boolean fan;
+    private String title;
     private Schedule schedule;
 
-    public Thermostat(int ct, int st, boolean fan) {
-        this.currentTemp = ct;
-        this.setTemp = st;
+    public Thermostat() {
+
+        // Initial default values for testing
+        this.currentTemp = 70;
+        this.setTemp = 70;
         this.threshold = 3;
-        this.fan = fan;
-        // This needs to be populated from the database or given a default
+        this.fan = false;
         this.schedule = null;
     }
+
+    public Thermostat(int id, int threshold, String title) {
+        this.threshold = threshold;
+        this.id = id;
+        this.title = title;
+    }
+
+    // This should return the stringified version of the JSON API spec object for data
+    @Override
+    public String toString() { 
+        return String.format("{'type':'thermostat','id':'" + id + "','attributes':{'title':'" + title + "','threshold':'" + threshold + "'}},"); 
+    } 
 
     public int getCurrentTemp() {
         return this.currentTemp;
@@ -38,6 +54,22 @@ public class Thermostat {
 
     public void setFan(boolean fan) {
         this.fan = fan;
+    }
+
+    public int getThreshold() {
+        return this.threshold;
+    }
+
+    public void setThreshold(int t) {
+        this.threshold = t;
+    }
+
+    public Schedule getSchedule() {
+        return this.schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
     }
 
 
