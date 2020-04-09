@@ -48,7 +48,54 @@ public class Pgdatabase {
         } catch(SQLException e) {
 
         }
-        
         return tList;
+    }
+
+    public int createThermostat(Thermostat temp) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "INSERT INTO THERMOSTAT (TITLE,THRESHOLD) "
+            + "VALUES (" + temp.getTitle() + ", " + temp.getThreshold() + " RETURNING ID);" );
+            rs.next();
+            int id = rs.getInt("id");
+            rs.close();
+            stmt.close();
+            conn.close();
+            return id;
+        } catch(SQLException e) {
+
+        }
+        return -1;
+    }
+
+    public boolean modifyThermostat(Thermostat temp) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "UPDATE THERMOSTAT set title = " + temp.getTitle() + " AND threshold = " 
+            + temp.getThreshold() + " where ID=" + temp.getId() + ";" );
+            rs.close();
+            stmt.close();
+            conn.close();
+            return true;
+        } catch(SQLException e) {
+
+        }
+        return false;
+    }
+
+    public boolean removeThermostat(int id) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "DELETE from THERMOSTAT where ID = " + Integer.toString(id) + ";");
+            rs.close();
+            stmt.close();
+            conn.close();
+            return true;
+        } catch(SQLException e) {
+            return false;
+        }
     }
 }

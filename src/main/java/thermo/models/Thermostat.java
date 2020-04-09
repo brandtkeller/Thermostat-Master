@@ -22,7 +22,6 @@ public class Thermostat {
 
     public Thermostat(int id, int threshold, String title) {
         this.threshold = threshold;
-        this.id = id;
         this.title = title;
     }
 
@@ -30,7 +29,15 @@ public class Thermostat {
     @Override
     public String toString() { 
         return String.format("{'type':'thermostat','id':'" + id + "','attributes':{'title':'" + title + "','threshold':'" + threshold + "'}},"); 
-    } 
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getCurrentTemp() {
         return this.currentTemp;
@@ -72,5 +79,11 @@ public class Thermostat {
         this.schedule = schedule;
     }
 
+    public String getTitle() {
+        return this.title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }
