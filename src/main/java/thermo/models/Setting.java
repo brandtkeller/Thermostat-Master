@@ -13,7 +13,8 @@ public class Setting {
     private int sleepTemp;    
 
 
-    public Setting(String day, String wake, int wt, String leave, int lt, String home, int ht, String sleep, int st) {
+    public Setting(int id, String day, String wake, int wt, String leave, int lt, String home, int ht, String sleep, int st) {
+        this.id = id;
         this.day = day;
         this.wake = wake;
         this.wakeTemp = wt;
@@ -24,7 +25,44 @@ public class Setting {
         this.sleep = sleep;
         this.sleepTemp = st;
     }
-    // Contain logic (method) for returning current 'Set Temperature'
-    // If Setting is valid return 'Set Temperature', else return -1
-    // If -1, schedule needs to update current setting
+    
+    public int getId() {
+        return this.id;
+    }
+
+    public String getDay() {
+        return this.day;
+    }
+
+    public String getWakeTime() {
+        return this.wake;
+    }
+
+    public int getWakeTemp() {
+        return this.wakeTemp;
+    }
+
+    public String getLeaveTime() {
+        return this.leave;
+    }
+
+    public int getLeaveTemp() {
+        return this.leaveTemp;
+    }
+
+    public String getHomeTime() {
+        return this.home;
+    }
+
+    public int getHomeTemp() {
+        return this.homeTemp;
+    }
+
+    public String getSleepTime() {
+        return this.sleep;
+    }
+
+    public int getSleepTemp() {
+        return this.sleepTemp;
+    }
 }

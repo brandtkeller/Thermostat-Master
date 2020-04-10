@@ -1,23 +1,21 @@
 package thermo;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import thermo.models.Thermostat;
-import thermo.database.*;
 
 @SpringBootApplication
 public class Application {
 
     public static void main(String[] args) {
-        // Thermostat thermo = ThermostatDAO.getInstance();
+        Thermostat thermo = null;
 
         SpringApplication.run(Application.class, args);
 
-        
+        // Allow the sprint boot application to initialize itself and the thermostatDAO instance
         try {
             TimeUnit.SECONDS.sleep(5);
         }
@@ -25,7 +23,7 @@ public class Application {
             
         }
 
-        
+        // thermo = ThermostatDAO.getInstance();
 
         // Get ambient temperature from sensor
         // Compare against Thermostat -> schedule -> setting Temp
