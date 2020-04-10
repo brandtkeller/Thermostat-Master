@@ -8,6 +8,7 @@ public class Thermostat {
     private int threshold;
     private boolean fan;
     private String title;
+    private int scheduleId;
     private Schedule schedule;
 
     public Thermostat() {
@@ -20,9 +21,11 @@ public class Thermostat {
         this.schedule = null;
     }
 
-    public Thermostat(int id, int threshold, String title) {
+    public Thermostat(int id, int threshold, String title, int scheduleId) {
+        this.id = id;
         this.threshold = threshold;
         this.title = title;
+        this.scheduleId = scheduleId;
     }
 
     // This should return the stringified version of the JSON API spec object for data
@@ -77,6 +80,14 @@ public class Thermostat {
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
+    }
+
+    public int getScheduleId() {
+        return this.scheduleId;
+    }
+
+    public void setScheduleId(int id) {
+        this.scheduleId = id;
     }
 
     public String getTitle() {

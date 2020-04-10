@@ -1,6 +1,7 @@
 package thermo;
 
 import thermo.models.*;
+import thermo.database.*;
 
 public class ThermostatDAO {
     private static Thermostat instance = null;
@@ -11,15 +12,8 @@ public class ThermostatDAO {
     // if database is empty, start with a standard static template
     public static Thermostat getInstance() {
         if (instance == null) {
-            // Query DB and create thermostat object, get the active schedule ID
-            instance = new Thermostat(3, 1, "test");
-            // Query DB and create schedule object from active schedule
-                // Assign to thermostat
-            Schedule schedule = new Schedule();
-            instance.setSchedule(schedule);
-            // Query DB and create all setting objects
-                // Assign to schedule
-            //schedule.addSettingToList(new Setting());
+            Pgdatabase db = new Pgdatabase();
+            instance = db.init("Main");
         }
         return instance;
     }

@@ -46,29 +46,25 @@ public class ThermostatController {
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> getThermostat(@PathVariable("id") String id) { 
         Pgdatabase test = new Pgdatabase();
+        Thermostat temp = test.getThermostatById(Integer.parseInt(id));
 
-        List<Thermostat> tList = test.getAllThermostats();
-
-        for (Thermostat temp : tList) {
-            if (temp.getId() == Integer.parseInt(id)) {
-                return new ResponseEntity<String>("{'data':[" + StringUtils.chop(temp.toString()) + "]}", HttpStatus.OK);
-            }
+        if (temp != null) {
+            return new ResponseEntity<String>("{'data':[" + StringUtils.chop(temp.toString()) + "]}", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("Thermostat was not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<String>("Thermostat was not found", HttpStatus.NOT_FOUND);
     }  
 
-    // @PutMapping(path="/{id}", produces = "application/json")
-    // public ResponseEntity<Object> putEmployee(@PathVariable("id") String id, @RequestBody Employee employee) { 
-    //     for (int i = 0; i < employeeDao.getAllEmployees().getEmployeeList().size(); i++) {
-    //         Employee emp = employeeDao.getAllEmployees().getEmployeeList().get(i);
-    //         if (Integer.parseInt(id) == emp.getId()) {
-    //             employee.setId(Integer.parseInt(id));
-    //             employeeDao.updateEmployee(i, employee);
-    //             return new ResponseEntity<>("Employee has been updated successfully", HttpStatus.OK);
-    //         }
-    //     }
-    //     return new ResponseEntity<>("Employee was not found", HttpStatus.NOT_FOUND);
-    // }  
+    @PutMapping(path="/{id}", produces = "application/json")
+    public ResponseEntity<String> putThermostat(@PathVariable("id") String id, @RequestBody Thermostat thermo) { 
+        Pgdatabase test = new Pgdatabase();
+
+        if (test.modifyThermostat(thermo)) {
+            return new ResponseEntity<String>("{'data':[" + StringUtils.chop(thermo.toString()) + "]}", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("Thermostat was not found", HttpStatus.NOT_FOUND);
+        }
+    }  
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> addThermostat(@RequestBody Thermostat thermo) {

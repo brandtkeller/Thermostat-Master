@@ -1,6 +1,7 @@
 package thermo.models;
 
 public class Setting {
+    private int id;
     private String day; // IE 'Thur'
     private String wake; // IE '09:00:00'
     private int wakeTemp; // IE '67'
