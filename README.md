@@ -2,6 +2,15 @@
 
 Main backend server for the Open Thermostat integration system
 
+## Updates
+This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
+Activity there may be more recent as updates are only pushed to github during merge to master.
+
+If you would like more information on updates, please reach out to:
+```
+Info@brandtkeller.net
+```
+
 ## Standard Communication
 
 The main server exists on a single device (Raspberry Pi) and contains RESTful interfacing, scheduling, and physical control of the HVAC unit via C-wire. As this device is usually located outside of the monitored region (garage or other closet) it relies on temperature nodes to enroll and simply await for a request of current temperature. 
