@@ -41,7 +41,7 @@ public class ScheduleController {
     }
 
     @GetMapping(path="/{id}", produces = "application/json")
-    public ResponseEntity<String> getThermostat(@PathVariable("id") String id) { 
+    public ResponseEntity<String> getSchedule(@PathVariable("id") String id) { 
         Pgdatabase test = new Pgdatabase();
         Schedule temp = test.getScheduleById(Integer.parseInt(id));
 
@@ -53,7 +53,7 @@ public class ScheduleController {
     }
     
     @PutMapping(path="/{id}", produces = "application/json")
-    public ResponseEntity<String> putThermostat(@PathVariable("id") String id, @RequestBody Schedule thermo) { 
+    public ResponseEntity<String> putSchedule(@PathVariable("id") String id, @RequestBody Schedule thermo) { 
         Pgdatabase test = new Pgdatabase();
 
         if (test.modifySchedule(thermo)) {
@@ -64,7 +64,7 @@ public class ScheduleController {
     }
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<String> addThermostat(@RequestBody Schedule thermo) {
+    public ResponseEntity<String> addSchedule(@RequestBody Schedule thermo) {
         Pgdatabase test = new Pgdatabase();
         int id = test.createSchedule(thermo);
 
@@ -83,7 +83,7 @@ public class ScheduleController {
     }
 
     @DeleteMapping(path="/{id}", produces = "application/json")
-    public ResponseEntity<String> deleteThermostat(@PathVariable("id") String id) { 
+    public ResponseEntity<String> deleteSchedule(@PathVariable("id") String id) { 
         Pgdatabase test = new Pgdatabase();
 
         List<Schedule> tList = test.getAllSchedules();

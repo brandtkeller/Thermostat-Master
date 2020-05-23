@@ -306,7 +306,7 @@ public class Pgdatabase {
         return null;
     }
 
-    public int createSchedule(Setting temp) {
+    public int createSetting(Setting temp) {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();

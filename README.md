@@ -2,6 +2,11 @@
 
 Main backend server for the Open Thermostat integration system
 
+## TO DO
+* Schedule controller
+* Setting controller
+* Enrollment controller
+
 ## Getting Started
 
 These instructions will get you a .jar package that can be transferred from a Development machine or built on a Raspberry Pi. 
