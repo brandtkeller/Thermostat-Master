@@ -2,6 +2,7 @@ package thermo.models;
 
 public class Setting {
     private int id;
+    private int scheduleId;
     private String day; // IE 'Thur'
     private String wake; // IE '09:00:00'
     private int wakeTemp; // IE '67'
@@ -13,8 +14,9 @@ public class Setting {
     private int sleepTemp;    
 
 
-    public Setting(int id, String day, String wake, int wt, String leave, int lt, String home, int ht, String sleep, int st) {
+    public Setting(int id, int scheduleId, String day, String wake, int wt, String leave, int lt, String home, int ht, String sleep, int st) {
         this.id = id;
+        this.scheduleId = scheduleId;
         this.day = day;
         this.wake = wake;
         this.wakeTemp = wt;
@@ -28,6 +30,10 @@ public class Setting {
     
     public int getId() {
         return this.id;
+    }
+
+    public int getScheduleId() {
+        return this.scheduleId;
     }
 
     public String getDay() {

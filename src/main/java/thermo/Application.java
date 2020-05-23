@@ -5,13 +5,13 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import thermo.models.Thermostat;
+// import thermo.models.Thermostat;
 
 @SpringBootApplication
 public class Application {
 
     public static void main(String[] args) {
-        Thermostat thermo = null;
+        // Thermostat thermo = null;
 
         SpringApplication.run(Application.class, args);
 

@@ -2,6 +2,11 @@
 
 Main backend server for the Open Thermostat integration system
 
+## TO DO
+* Schedule controller
+* Setting controller
+* Enrollment controller
+
 ## Updates
 This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
 Activity there may be more recent as updates are only pushed to github during merge to master.

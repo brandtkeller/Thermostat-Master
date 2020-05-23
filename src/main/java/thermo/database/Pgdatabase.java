@@ -150,6 +150,216 @@ public class Pgdatabase {
         return false;
     }
 
+    /*---------------Schedule database functions --------------- */
+
+    public List<Schedule> getAllSchedules() {
+        List<Schedule> sList = new ArrayList<>();
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SCHEDULE;" );
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String  title = rs.getString("title");
+                Schedule temp = new Schedule(id, title);
+                sList.add(temp);
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return sList;
+    }
+
+    public Schedule getScheduleById(int id) {
+
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SCHEDULE WHERE ID = " + Integer.toString(id) + ";" );
+            while (rs.next()) {
+                String  title = rs.getString("title");
+                Schedule temp = new Schedule(id, title);
+                return temp;
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return null;
+    }
+
+    public int createSchedule(Schedule temp) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "INSERT INTO Schedule (TITLE) "
+            + "VALUES (" + temp.getTitle() + " RETURNING ID);" );
+            rs.next();
+            int id = rs.getInt("id");
+            rs.close();
+            stmt.close();
+            conn.close();
+            return id;
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return -1;
+    }
+
+    public boolean modifySchedule(Schedule temp) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "UPDATE Schedule set title = " + temp.getTitle() + " where ID=" + temp.getId() + ";" );
+            rs.close();
+            stmt.close();
+            conn.close();
+            return true;
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return false;
+    }
+
+    public boolean removeSchedule(int id) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "DELETE from Schedule where ID = " + Integer.toString(id) + ";");
+            rs.close();
+            stmt.close();
+            conn.close();
+            return true;
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return false;
+    }
+
+    /* --------------- Settings database functions --------------- */
+
+    public List<Setting> getAllSettings() {
+        List<Setting> sList = new ArrayList<>();
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SETTINGS;" );
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String  day = rs.getString("day");
+                int scheduleId = rs.getInt("scheduleid");
+                String wake = rs.getString("wake");
+                int wakeTemp = rs.getInt("wakeTemp");
+                String leave = rs.getString("leave");
+                int leaveTemp = rs.getInt("leaveTemp");
+                String home = rs.getString("home");
+                int homeTemp = rs.getInt("homeTemp");
+                String sleep = rs.getString("sleep");
+                int sleepTemp = rs.getInt("sleepTemp");
+                Setting temp = new Setting(id, scheduleId, day, wake, wakeTemp, leave, leaveTemp, home, homeTemp, sleep, sleepTemp);
+                sList.add(temp);
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return sList;
+    }
+
+    public Setting getSettingById(int id) {
+
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SETTINGS WHERE ID = " + Integer.toString(id) + ";" );
+            while (rs.next()) {
+                String  day = rs.getString("day");
+                int scheduleId = rs.getInt("scheduleid");
+                String wake = rs.getString("wake");
+                int wakeTemp = rs.getInt("wakeTemp");
+                String leave = rs.getString("leave");
+                int leaveTemp = rs.getInt("leaveTemp");
+                String home = rs.getString("home");
+                int homeTemp = rs.getInt("homeTemp");
+                String sleep = rs.getString("sleep");
+                int sleepTemp = rs.getInt("sleepTemp");
+                Setting temp = new Setting(id, scheduleId, day, wake, wakeTemp, leave, leaveTemp, home, homeTemp, sleep, sleepTemp);
+                return temp;
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return null;
+    }
+
+    public int createSetting(Setting temp) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "INSERT INTO Settings (SCHEDULEID, DAY, WAKE, WAKETEMP, LEAVE, LEAVETEMP, HOME, HOMETEMP, LEAVE, LEAVETEMP) "
+            + "VALUES (" + temp.getScheduleId() + ", " + temp.getDay() + ", " 
+            + temp.getWakeTime() + ", " + temp.getWakeTemp() +  ", " 
+            + temp.getLeaveTime() +  ", " + temp.getLeaveTemp() +  ", " 
+            + temp.getHomeTime() +  ", " + temp.getHomeTemp() +  ", " 
+            + temp.getSleepTime() +  ", " + temp.getSleepTemp() +  
+            " RETURNING ID);" );
+            rs.next();
+            int id = rs.getInt("id");
+            rs.close();
+            stmt.close();
+            conn.close();
+            return id;
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return -1;
+    }
+
+
+    // TODO: update this to set variables correctly
+    public boolean modifySetting(Schedule temp) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "UPDATE Settings set title = " + temp.getTitle() + " where ID=" + temp.getId() + ";" );
+            rs.close();
+            stmt.close();
+            conn.close();
+            return true;
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return false;
+    }
+
+    public boolean removeSetting(int id) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "DELETE from Settings where ID = " + Integer.toString(id) + ";");
+            rs.close();
+            stmt.close();
+            conn.close();
+            return true;
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return false;
+    }
 
     /*--------------- SQL Exception functions for logging --------------- */
 
