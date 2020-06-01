@@ -364,6 +364,107 @@ public class Pgdatabase {
         return false;
     }
 
+    /*--------------- Node database functions --------------- */
+
+    public List<Node> getAllNodes() {
+        List<Node> nList = new ArrayList<>();
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM NODES;" );
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String ipaddress = rs.getString("ipAddress");
+                String type = rs.getString("type");
+                // Could be a problem here getting a nmll value?
+                String title = rs.getString("title");
+                Node temp = new Node(id, ipaddress, title, type);
+                nList.add(temp);
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return nList;
+    }
+
+    public Node getNodeById(int id) {
+
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM NODES WHERE ID = " + Integer.toString(id) + ";" );
+            while (rs.next()) {
+                String ipaddress = rs.getString("ipAddress");
+                String type = rs.getString("type");
+                // Could be a problem here getting a null value?
+                String title = rs.getString("title");
+                Node temp = new Node(id, ipaddress, title, type);
+                return temp;
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return null;
+    }
+
+    public int createNode(Node temp) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "INSERT INTO Nodes (IPADDRESS, TYPE, TITLE) "
+            + "VALUES (" + temp.getIp() + ", " + temp.getType() + ", " + temp.getTitle() +
+            " RETURNING ID);" );
+            rs.next();
+            int id = rs.getInt("id");
+            rs.close();
+            stmt.close();
+            conn.close();
+            return id;
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return -1;
+    }
+
+    public boolean modifyNode(Node temp) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "UPDATE Nodes set IPADDRESS = " + temp.getIp() + ", TYPE = " + temp.getType() + ", TITLE = " 
+            + temp.getTitle() + " where ID = " + temp.getId() + ";" );
+            rs.close();
+            stmt.close();
+            conn.close();
+            return true;
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return false;
+    }
+
+    public boolean removeNode(int id) {
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "DELETE from Nodes where ID = " + Integer.toString(id) + ";");
+            rs.close();
+            stmt.close();
+            conn.close();
+            return true;
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return false;
+    }
+
     /*--------------- SQL Exception functions for logging --------------- */
 
     public static void printSQLException(SQLException ex) {
