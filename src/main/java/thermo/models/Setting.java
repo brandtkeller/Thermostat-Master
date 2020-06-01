@@ -32,43 +32,88 @@ public class Setting {
         return this.id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getScheduleId() {
         return this.scheduleId;
+    }
+
+    public void setScheduleId(int id) {
+        this.scheduleId = id;
     }
 
     public String getDay() {
         return this.day;
     }
 
+    public void setDay(String day) {
+        this.day = day;
+    }
+
     public String getWakeTime() {
         return this.wake;
+    }
+
+    public void setWakeTime(String wake) {
+        this.wake = wake;
     }
 
     public int getWakeTemp() {
         return this.wakeTemp;
     }
 
+    public void setWaketemp(int temp) {
+        this.wakeTemp = temp;
+    }
+
     public String getLeaveTime() {
         return this.leave;
+    }
+
+    public void setLeaveTime(String leave) {
+        this.leave = leave;
     }
 
     public int getLeaveTemp() {
         return this.leaveTemp;
     }
 
+    public void setLeaveTemp(int temp) {
+        this.leaveTemp = temp;
+    }
+
     public String getHomeTime() {
         return this.home;
+    }
+
+    public void setHomeTime(String home) {
+        this.home = home;
     }
 
     public int getHomeTemp() {
         return this.homeTemp;
     }
 
+    public void setHomeTemp(int temp) {
+        this.homeTemp = temp;
+    }
+
     public String getSleepTime() {
         return this.sleep;
+    }
+
+    public void setSleepTime(String sleep) {
+        this.sleep = sleep;
     }
 
     public int getSleepTemp() {
         return this.sleepTemp;
     }
+
+    public void setSleepTemp(int temp) {
+        this.sleepTemp = temp;
+    }
 }
+

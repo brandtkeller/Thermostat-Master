@@ -11,7 +11,7 @@ import java.util.List;
 import thermo.models.*;
 
 public class Pgdatabase {
-
+    // Pass these as runtime environment variables
     private final String url = "jdbc:postgresql://postgres/thermostat";
     private final String user = "developer";
     private final String password = "keller";
@@ -329,13 +329,16 @@ public class Pgdatabase {
         return -1;
     }
 
-
-    // TODO: update this to set variables correctly
-    public boolean modifySetting(Schedule temp) {
+    public boolean modifySetting(Setting temp) {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "UPDATE Settings set title = " + temp.getTitle() + " where ID=" + temp.getId() + ";" );
+            ResultSet rs = stmt.executeQuery( "UPDATE Settings set day = " + temp.getDay() + ", scheduleid = " + temp.getScheduleId() 
+            + ", wake = " + temp.getWakeTime() + ", waketemp = " + temp.getWakeTemp()
+            + ", leave = " + temp.getLeaveTime() + ", leavetemp = " + temp.getLeaveTemp()
+            + ", home = " + temp.getHomeTime() + ", hometemp = " + temp.getHomeTemp()
+            + ", sleep = " + temp.getSleepTime() + ", sleeptemp = " + temp.getSleepTemp()
+            + " where ID=" + temp.getId() + ";" );
             rs.close();
             stmt.close();
             conn.close();

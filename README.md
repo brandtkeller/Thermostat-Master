@@ -3,9 +3,11 @@
 Main backend server for the Open Thermostat integration system
 
 ## TO DO
-* Schedule controller
-* Setting controller
 * Enrollment controller
+* Start-up initialization
+* Runtime logic 
+* Raspberry Pi GPIO integration
+* 
 
 ## Updates
 This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
@@ -20,7 +22,9 @@ Info@brandtkeller.net
 
 The main server exists on a single device (Raspberry Pi) and contains RESTful interfacing, scheduling, and physical control of the HVAC unit via C-wire. As this device is usually located outside of the monitored region (garage or other closet) it relies on temperature nodes to enroll and simply await for a request of current temperature. 
 
-This architecture will allow multiple nodes to enroll and enhance the temperature view of the house as a whole.
+This architecture will allow multiple nodes to enroll and enhance the temperature bias from that of a single sensor to a system with modifiable biases. 
+
+Example: During the day-time, individual rooms are less populated while main living spaces (kitchen, living room) are subject to regular sustainment. In this case, biasing the system to refine control of the temperature to these spaces to sustain a comfortable temperature would make the most sense.
 
 ## Getting Started
 
