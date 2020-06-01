@@ -3,11 +3,11 @@
 Main backend server for the Open Thermostat integration system
 
 ## TO DO
-* Enrollment controller
+* Node controller
 * Start-up initialization
+* Empty database management
 * Runtime logic 
 * Raspberry Pi GPIO integration
-* 
 
 ## Updates
 This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
