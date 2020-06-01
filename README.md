@@ -3,7 +3,6 @@
 Main backend server for the Open Thermostat integration system
 
 ## TO DO
-* Node controller
 * Start-up initialization
 * Empty database management
 * Runtime logic 

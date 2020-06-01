@@ -6,8 +6,8 @@
     <version>0.0.1</version>
     <packaging>jar</packaging>
  
-    <name>SpringBootDemo</name>
-    <description>Spring Boot REST API</description>
+    <name>ThermostatMaster</name>
+    <description>Thermostat Master server - REST API w/ active monitoring</description>
  
     <parent>
         <groupId>org.springframework.boot</groupId>

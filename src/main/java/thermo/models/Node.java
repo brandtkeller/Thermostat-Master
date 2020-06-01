@@ -20,6 +20,11 @@ public class Node {
         this.type = type;
     }
 
+    @Override
+    public String toString() { 
+        return String.format("{'type':'node','id':'" + id + "','attributes':{'title':'" + title + "','type':'" + type + "','ipAddress':'" + ipaddress + "'}},"); 
+    }
+
     public int getId() {
         return this.id;
     }

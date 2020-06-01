@@ -306,6 +306,36 @@ public class Pgdatabase {
         return null;
     }
 
+    public Setting getSettingBySchedule(int scheduleId) {
+
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SETTINGS WHERE SCHEDULEID = " + Integer.toString(scheduleId) + ";" );
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String  day = rs.getString("day");
+                String wake = rs.getString("wake");
+                int wakeTemp = rs.getInt("wakeTemp");
+                String leave = rs.getString("leave");
+                int leaveTemp = rs.getInt("leaveTemp");
+                String home = rs.getString("home");
+                int homeTemp = rs.getInt("homeTemp");
+                String sleep = rs.getString("sleep");
+                int sleepTemp = rs.getInt("sleepTemp");
+                Setting temp = new Setting(id, scheduleId, day, wake, wakeTemp, leave, leaveTemp, home, homeTemp, sleep, sleepTemp);
+                return temp;
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return null;
+    }
+
     public int createSetting(Setting temp) {
         Connection conn = connect(); 
         try {

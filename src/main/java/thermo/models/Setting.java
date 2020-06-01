@@ -27,6 +27,16 @@ public class Setting {
         this.sleep = sleep;
         this.sleepTemp = st;
     }
+
+    @Override
+    public String toString() { 
+        return String.format("{'type':'setting','id':'" + id + "','attributes':{'day':'" + day + 
+        "','wake':'" + wake + "','wakeTemp':'" + wakeTemp +
+        "','leave':'" + leave + "','leaveTemp':'" + leaveTemp +
+        "','home':'" + home + "','homeTemp':'" + homeTemp +
+        "','sleep':'" + sleep + "','sleepTemp':'" + sleepTemp +
+        "'}},"); 
+    }
     
     public int getId() {
         return this.id;

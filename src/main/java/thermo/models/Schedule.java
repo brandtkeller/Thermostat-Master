@@ -14,6 +14,11 @@ public class Schedule {
 
     }
 
+    @Override
+    public String toString() { 
+        return String.format("{'type':'schedule','id':'" + id + "','attributes':{'title':'" + title + "}},"); 
+    }
+
     public int getId() {
         return this.id;
     }
