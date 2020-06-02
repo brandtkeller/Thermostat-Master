@@ -24,28 +24,35 @@ public class Pgdatabase {
             Statement stmt = conn.createStatement();
 
             // DB Table initialization
-            stmt.executeQuery( "CREATE TABLE IF NOT EXISTS thermostat (id SERIAL PRIMARY KEY, Title VARCHAR(255), Threshold INT, Scheduleid SERIAL);" );
-            stmt.executeQuery( "CREATE TABLE IF NOT EXISTS schedule (id SERIAL PRIMARY KEY, Title VARCHAR(255));" );
-            stmt.executeQuery("CREATE TABLE IF NOT EXISTS setting (id SERIAL PRIMARY KEY, Day VARCHAR(255), Scheduleid SERIAL," +
+            stmt.executeUpdate( "CREATE TABLE IF NOT EXISTS thermostat (id SERIAL PRIMARY KEY, Title VARCHAR(255), Threshold INT, Scheduleid SERIAL);" );
+            stmt.executeUpdate( "CREATE TABLE IF NOT EXISTS schedule (id SERIAL PRIMARY KEY, Title VARCHAR(255));" );
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS setting (id SERIAL PRIMARY KEY, Day VARCHAR(255), Scheduleid SERIAL," +
             " Wake VARCHAR(255), WakeTemp INT, Leave VARCHAR(255), LeaveTemp INT," +
             " Home VARCHAR(255), HomeTemp INT, Sleep VARCHAR(255), SleepTemp INT);");
-            stmt.executeQuery("CREATE TABLE IF NOT EXISTS node (id SERIAL PRIMARY KEY, Title VARCHAR(255), ipAddress VARCHAR(255), Type VARCHAR(255));");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS node (id SERIAL PRIMARY KEY, Title VARCHAR(255), ipAddress VARCHAR(255), Type VARCHAR(255));");
             
 
             // If there are no thermostats, then we need to create whole stack
             tList = getAllThermostats();
             if ( tList.size() == 0) {
-                stmt.executeQuery("INSERT INTO thermostat (Title, Threshold, Scheduleid) " +
-                "VALUES ('Main', 3, 1);");
-                stmt.executeQuery("INSERT INTO schedule (Title) VALUES ('Main');");
-                stmt.executeQuery("INSERT INTO Setting (SCHEDULEID, DAY, WAKE, WAKETEMP, LEAVE, LEAVETEMP, HOME, HOMETEMP, LEAVE, LEAVETEMP)" +
-                " VALUES ('Sun', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
-                "('Mon', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
-                "('Tue', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
-                "('Wed', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
-                "('Thu', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
-                "('Fri', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
-                "('Sat', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55);");
+                // Delete all entries from schedule and setting for fresh stack.
+                stmt.executeUpdate( "DELETE * FROM SCHEDULE" );
+                stmt.executeUpdate( "DELETE * FROM SETTING" );
+                ResultSet rs = stmt.executeQuery("INSERT INTO schedule (Title) VALUES ('Main') RETURNING ID;");
+                rs.next();
+                int schedId = rs.getInt("id");
+                rs.close();
+                stmt.executeUpdate("INSERT INTO thermostat (Title, Threshold, Scheduleid) " +
+                "VALUES ('Main', 3, " + schedId + ");");
+                
+                stmt.executeUpdate("INSERT INTO Setting (DAY, SCHEDULEID, WAKE, WAKETEMP, LEAVE, LEAVETEMP, HOME, HOMETEMP, SLEEP, SLEEPTEMP)" +
+                " VALUES ('Sun', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Mon', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Tue', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Wed', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Thu', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Fri', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Sat', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55);");
             }
             
             stmt.close();
