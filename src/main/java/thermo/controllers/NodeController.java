@@ -26,7 +26,7 @@ public class NodeController {
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getNodes() {
         String response = "{'data':[";
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
 
         List<Node> tList = test.getAllNodes();
 
@@ -42,7 +42,7 @@ public class NodeController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> getNode(@PathVariable("id") String id) { 
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
         Node temp = test.getNodeById(Integer.parseInt(id));
 
         if (temp != null) {
@@ -54,7 +54,7 @@ public class NodeController {
     
     @PutMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> putNode(@PathVariable("id") String id, @RequestBody Node thermo) { 
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
 
         if (test.modifyNode(thermo)) {
             return new ResponseEntity<String>("{'data':[" + StringUtils.chop(thermo.toString()) + "]}", HttpStatus.OK);
@@ -65,7 +65,7 @@ public class NodeController {
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> addNode(@RequestBody Node thermo) {
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
         int id = test.createNode(thermo);
 
         if (id == -1) {
@@ -84,7 +84,7 @@ public class NodeController {
 
     @DeleteMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> deleteNode(@PathVariable("id") String id) { 
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
 
         List<Node> tList = test.getAllNodes();
 

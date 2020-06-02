@@ -12,12 +12,18 @@ import thermo.models.*;
 
 public class Pgdatabase {
     // Pass these as runtime environment variables
-    private final String url = "jdbc:postgresql://postgres/thermostat";
-    private final String user = "developer";
-    private final String password = "keller";
+    private String url;
+    private String user;
+    private String password;
 
-    public Pgdatabase() {
+    private static Pgdatabase pgdb = null;
+
+    public Pgdatabase(String url, String user, String pass) {
         List<Thermostat> tList = new ArrayList<>();
+
+        setUrl(url);
+        setUser(user);
+        setPassword(pass);
 
         Connection conn = connect(); 
         try {
@@ -36,8 +42,8 @@ public class Pgdatabase {
             tList = getAllThermostats();
             if ( tList.size() == 0) {
                 // Delete all entries from schedule and setting for fresh stack.
-                stmt.executeUpdate( "DELETE * FROM SCHEDULE" );
-                stmt.executeUpdate( "DELETE * FROM SETTING" );
+                stmt.executeUpdate( "DELETE FROM SCHEDULE" );
+                stmt.executeUpdate( "DELETE FROM SETTING" );
                 ResultSet rs = stmt.executeQuery("INSERT INTO schedule (Title) VALUES ('Main') RETURNING ID;");
                 rs.next();
                 int schedId = rs.getInt("id");
@@ -61,6 +67,28 @@ public class Pgdatabase {
         } catch(SQLException e) {
             printSQLException(e);
         }
+    }
+
+
+    public static Pgdatabase getInstance() {
+        return pgdb;
+    }
+
+    public void setUrl(String url) {
+        this.url = "jdbc:postgresql://" + url;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public static void initializeDb(String url, String user, String password) {
+        System.out.println("Initializing database object");
+        pgdb = new Pgdatabase(url, user, password);
     }
 
     /* --------------- Function to connect to the database each time --------------- */

@@ -26,7 +26,7 @@ public class SettingsController {
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getSettings() {
         String response = "{'data':[";
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
 
         List<Setting> tList = test.getAllSettings();
 
@@ -42,7 +42,7 @@ public class SettingsController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> getSetting(@PathVariable("id") String id) { 
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
         Setting temp = test.getSettingById(Integer.parseInt(id));
 
         if (temp != null) {
@@ -54,7 +54,7 @@ public class SettingsController {
     
     @PutMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> putSetting(@PathVariable("id") String id, @RequestBody Setting thermo) { 
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
 
         if (test.modifySetting(thermo)) {
             return new ResponseEntity<String>("{'data':[" + StringUtils.chop(thermo.toString()) + "]}", HttpStatus.OK);
@@ -65,7 +65,7 @@ public class SettingsController {
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> addSetting(@RequestBody Setting thermo) {
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
         int id = test.createSetting(thermo);
 
         if (id == -1) {
@@ -84,7 +84,7 @@ public class SettingsController {
 
     @DeleteMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> deleteSetting(@PathVariable("id") String id) { 
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
 
         List<Setting> tList = test.getAllSettings();
 

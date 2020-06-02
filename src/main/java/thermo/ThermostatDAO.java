@@ -12,7 +12,7 @@ public class ThermostatDAO {
     // if database is empty, start with a standard static template
     public static Thermostat getInstance() {
         if (instance == null) {
-            Pgdatabase db = new Pgdatabase();
+            Pgdatabase db = Pgdatabase.getInstance();
             instance = db.init("Main");
         }
         return instance;
