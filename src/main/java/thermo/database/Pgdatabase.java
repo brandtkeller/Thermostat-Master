@@ -16,6 +16,46 @@ public class Pgdatabase {
     private final String user = "developer";
     private final String password = "keller";
 
+    public Pgdatabase() {
+        List<Thermostat> tList = new ArrayList<>();
+
+        Connection conn = connect(); 
+        try {
+            Statement stmt = conn.createStatement();
+
+            // DB Table initialization
+            stmt.executeQuery( "CREATE TABLE IF NOT EXISTS thermostat (id SERIAL PRIMARY KEY, Title VARCHAR(255), Threshold INT, Scheduleid SERIAL);" );
+            stmt.executeQuery( "CREATE TABLE IF NOT EXISTS schedule (id SERIAL PRIMARY KEY, Title VARCHAR(255));" );
+            stmt.executeQuery("CREATE TABLE IF NOT EXISTS setting (id SERIAL PRIMARY KEY, Day VARCHAR(255), Scheduleid SERIAL," +
+            " Wake VARCHAR(255), WakeTemp INT, Leave VARCHAR(255), LeaveTemp INT," +
+            " Home VARCHAR(255), HomeTemp INT, Sleep VARCHAR(255), SleepTemp INT);");
+            stmt.executeQuery("CREATE TABLE IF NOT EXISTS node (id SERIAL PRIMARY KEY, Title VARCHAR(255), ipAddress VARCHAR(255), Type VARCHAR(255));");
+            
+
+            // If there are no thermostats, then we need to create whole stack
+            tList = getAllThermostats();
+            if ( tList.size() == 0) {
+                stmt.executeQuery("INSERT INTO thermostat (Title, Threshold, Scheduleid) " +
+                "VALUES ('Main', 3, 1);");
+                stmt.executeQuery("INSERT INTO schedule (Title) VALUES ('Main');");
+                stmt.executeQuery("INSERT INTO Setting (SCHEDULEID, DAY, WAKE, WAKETEMP, LEAVE, LEAVETEMP, HOME, HOMETEMP, LEAVE, LEAVETEMP)" +
+                " VALUES ('Sun', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Mon', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Tue', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Wed', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Thu', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Fri', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
+                "('Sat', 1, '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55);");
+            }
+            
+            stmt.close();
+            conn.close();
+
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+    }
+
     /* --------------- Function to connect to the database each time --------------- */
  
     public Connection connect() {
@@ -34,6 +74,7 @@ public class Pgdatabase {
 
     public Thermostat init(String title) {
         List<Thermostat> tList = new ArrayList<>();
+        
         tList = getAllThermostats();
 
         for (Thermostat temp : tList) {
@@ -250,7 +291,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM SETTINGS;" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SETTING;" );
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String  day = rs.getString("day");
@@ -281,7 +322,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM SETTINGS WHERE ID = " + Integer.toString(id) + ";" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SETTING WHERE ID = " + Integer.toString(id) + ";" );
             while (rs.next()) {
                 String  day = rs.getString("day");
                 int scheduleId = rs.getInt("scheduleid");
@@ -311,7 +352,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM SETTINGS WHERE SCHEDULEID = " + Integer.toString(scheduleId) + ";" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SETTING WHERE SCHEDULEID = " + Integer.toString(scheduleId) + ";" );
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String  day = rs.getString("day");
@@ -340,7 +381,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "INSERT INTO Settings (SCHEDULEID, DAY, WAKE, WAKETEMP, LEAVE, LEAVETEMP, HOME, HOMETEMP, LEAVE, LEAVETEMP) "
+            ResultSet rs = stmt.executeQuery( "INSERT INTO Setting (SCHEDULEID, DAY, WAKE, WAKETEMP, LEAVE, LEAVETEMP, HOME, HOMETEMP, LEAVE, LEAVETEMP) "
             + "VALUES (" + temp.getScheduleId() + ", " + temp.getDay() + ", " 
             + temp.getWakeTime() + ", " + temp.getWakeTemp() +  ", " 
             + temp.getLeaveTime() +  ", " + temp.getLeaveTemp() +  ", " 
@@ -363,7 +404,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "UPDATE Settings set day = " + temp.getDay() + ", scheduleid = " + temp.getScheduleId() 
+            ResultSet rs = stmt.executeQuery( "UPDATE Setting set day = " + temp.getDay() + ", scheduleid = " + temp.getScheduleId() 
             + ", wake = " + temp.getWakeTime() + ", waketemp = " + temp.getWakeTemp()
             + ", leave = " + temp.getLeaveTime() + ", leavetemp = " + temp.getLeaveTemp()
             + ", home = " + temp.getHomeTime() + ", hometemp = " + temp.getHomeTemp()
@@ -383,7 +424,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "DELETE from Settings where ID = " + Integer.toString(id) + ";");
+            ResultSet rs = stmt.executeQuery( "DELETE from Setting where ID = " + Integer.toString(id) + ";");
             rs.close();
             stmt.close();
             conn.close();
@@ -401,7 +442,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM NODES;" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM NODE;" );
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String ipaddress = rs.getString("ipAddress");
@@ -426,7 +467,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM NODES WHERE ID = " + Integer.toString(id) + ";" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM NODE WHERE ID = " + Integer.toString(id) + ";" );
             while (rs.next()) {
                 String ipaddress = rs.getString("ipAddress");
                 String type = rs.getString("type");
@@ -449,7 +490,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "INSERT INTO Nodes (IPADDRESS, TYPE, TITLE) "
+            ResultSet rs = stmt.executeQuery( "INSERT INTO Node (IPADDRESS, TYPE, TITLE) "
             + "VALUES (" + temp.getIp() + ", " + temp.getType() + ", " + temp.getTitle() +
             " RETURNING ID);" );
             rs.next();
@@ -468,7 +509,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "UPDATE Nodes set IPADDRESS = " + temp.getIp() + ", TYPE = " + temp.getType() + ", TITLE = " 
+            ResultSet rs = stmt.executeQuery( "UPDATE Node set IPADDRESS = " + temp.getIp() + ", TYPE = " + temp.getType() + ", TITLE = " 
             + temp.getTitle() + " where ID = " + temp.getId() + ";" );
             rs.close();
             stmt.close();
@@ -484,7 +525,7 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "DELETE from Nodes where ID = " + Integer.toString(id) + ";");
+            ResultSet rs = stmt.executeQuery( "DELETE from Node where ID = " + Integer.toString(id) + ";");
             rs.close();
             stmt.close();
             conn.close();
