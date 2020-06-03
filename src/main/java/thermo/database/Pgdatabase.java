@@ -49,7 +49,7 @@ public class Pgdatabase {
                 int schedId = rs.getInt("id");
                 rs.close();
                 stmt.executeUpdate("INSERT INTO thermostat (Title, Threshold, Scheduleid) " +
-                "VALUES ('Main', 3, " + schedId + ");");
+                "VALUES ('Master', 3, " + schedId + ");");
                 
                 stmt.executeUpdate("INSERT INTO Setting (DAY, SCHEDULEID, WAKE, WAKETEMP, LEAVE, LEAVETEMP, HOME, HOMETEMP, SLEEP, SLEEPTEMP)" +
                 " VALUES ('Sun', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +

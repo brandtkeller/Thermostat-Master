@@ -13,7 +13,7 @@ public class ThermostatDAO {
     public static Thermostat getInstance() {
         if (instance == null) {
             Pgdatabase db = Pgdatabase.getInstance();
-            instance = db.init("Main");
+            instance = db.init("Master");
         }
         return instance;
     }

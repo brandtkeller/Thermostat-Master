@@ -7,6 +7,8 @@ public class Thermostat {
     private int setTemp;
     private int threshold;
     private boolean fan;
+    private String mode;
+    private boolean state;
     private String title;
     private int scheduleId;
     private Schedule schedule;
@@ -96,5 +98,26 @@ public class Thermostat {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    
+    /* ---------- Main loop logic ---------- */
+    public int getCurrentTempSetting() {
+        // Get currentDay
+        // Get currentTime
+        // if thermostat.currentSettingEndTime == null || thermostat.currentSettingEndTime < currentTime 
+            // Get all settings from schedule
+            // get setting for current day
+            // if current time < wake
+                // thermostat.currentSettingTemp = previous day sleep
+                // thermostat.currentSettingEndTime = current day wake
+            // else
+                // thermostat.currentSettingTemp = current day wake
+                // thermostat.currentSettingEndTime = current day leave
+            // return currentSettingTemp
+        // else
+            // return currentSettingTemp
+
+        return 0;
     }
 }

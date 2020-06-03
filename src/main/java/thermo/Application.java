@@ -25,7 +25,7 @@ public class Application {
             Pgdatabase.initializeDb(db_url, db_user, db_pass);
         }
 
-        Thermostat thermo = null;
+        Thermostat thermo = ThermostatDAO.getInstance();
 
         SpringApplication.run(Application.class, args);
 
@@ -36,9 +36,6 @@ public class Application {
         catch (InterruptedException e) {
             
         }
-    
-
-        thermo = ThermostatDAO.getInstance();
 
         // Get ambient temperature from sensor
         // Compare against Thermostat -> schedule -> setting Temp

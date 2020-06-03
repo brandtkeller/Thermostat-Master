@@ -11,7 +11,7 @@ public class Setting {
     private String home;
     private int homeTemp;
     private String sleep;
-    private int sleepTemp;    
+    private int sleepTemp;
 
 
     public Setting(int id, int scheduleId, String day, String wake, int wt, String leave, int lt, String home, int ht, String sleep, int st) {

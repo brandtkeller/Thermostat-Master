@@ -5,8 +5,12 @@ Main backend server for the Open Thermostat integration system
 ## TO DO
 * Start-up initialization
 * Empty database management
+* Populate all models completely (via DB and REST)
 * Runtime logic 
 * Raspberry Pi GPIO integration
+* Multi-Master system
+* ARM architecture docker images
+* Docker -> Postgres connection docker environment variables
 
 ## Updates
 This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
@@ -24,6 +28,25 @@ The main server exists on a single device (Raspberry Pi) and contains RESTful in
 This architecture will allow multiple nodes to enroll and enhance the temperature bias from that of a single sensor to a system with modifiable biases. 
 
 Example: During the day-time, individual rooms are less populated while main living spaces (kitchen, living room) are subject to regular sustainment. In this case, biasing the system to refine control of the temperature to these spaces to sustain a comfortable temperature would make the most sense.
+
+## Mutli-HVAC / Thermostat Configuration
+
+The system will be built to handle a mutli-hvac building. There will only be one Master Node with an API and database connection active. The 'Type' selector of the node table will identify an enrolled node as either 'control','airtemp','watertemp'. 
+
+## Main logic loop - Scaling
+
+* Master startup and db initialization
+* Each Thermostat object contains full run-time logic
+* Skip main loop until temp sensor node enrolled or if mode == 'off' (default)
+* Nodes will auto-enroll, UI required to assign to a thermostat object
+* Main Application loop per each thermostat
+    * GET request to temp sensor nodes assigned to thermostat object (thermostat.nodes.forEach())
+    * Calculate some mean temperature value
+    * Compare temperature against thermostat -> currentSettingTemp (thermostat.getCurrentSettingTemp())
+    * if outside threshold && state == off , activate relays based on locality and mode
+        * If thermostat locality == local then activate relays locally
+        * If thermostat locality == remote then send relay activation to remote thermostat
+    * if inside threshold && state == on, de-activate relays based on locality and mode
 
 ## Getting Started
 
@@ -58,7 +81,7 @@ mvn package
 Run
 
 ```
-java -jar ./target/thermo-mdu-0.0.1.jar
+java -jar -Ddb_url=<postgresurl:port/db> -Ddb_user=<db user> -Ddb_pass=<db password>  target/thermo-master-0.0.1.jar
 ```
 
 The server will now be running on port 8080.
