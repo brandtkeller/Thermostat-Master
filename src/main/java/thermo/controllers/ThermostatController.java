@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.apache.commons.lang3.StringUtils;
 
-import thermo.ThermostatDAO;
 import thermo.models.Thermostat;
 import thermo.database.*;
 
 public class ThermostatController {
-    Thermostat thermo = ThermostatDAO.getInstance();
 
     // Get all thermostat objects
     @GetMapping(path="", produces = "application/json")

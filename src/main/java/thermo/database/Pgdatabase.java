@@ -107,25 +107,25 @@ public class Pgdatabase {
 
     /* --------------- Thermostat Initialization ---------------*/
 
-    public Thermostat init(String title) {
+    public List<Thermostat> init() {
         List<Thermostat> tList = new ArrayList<>();
         
         tList = getAllThermostats();
 
         for (Thermostat temp : tList) {
-            if (temp.getTitle() == title) {
-                // // Now get schedule by ID and assign to Thermostat
-                // Schedule schedule = getScheduleById(temp.getScheduleId());
-                // temp.setSchedule(schedule);
-                // // get all settings and add to schedule
-                // int scheduleId = schedule.getId();
-                // for (Setting set : getAllSettings) {
-                //      if (set.getScheduleId() == scheduleId) { schedule.addSettingToList(set) }   
-                // }
-                return temp;
+            // Now get schedule by ID and assign to Thermostat
+            Schedule sched = getScheduleById(temp.getScheduleId());
+            if (sched == null) {
+                System.out.println("Failed to get schedule for thermostat");
+                // Do something here to handle
             }
+            // Get length of the setting list and ensure there are 7
+
+            sched.setSettingList(getSettingBySchedule(sched.getId()));
+            temp.setSchedule(sched);
+            
         }
-        return null;
+        return tList;
     }
 
     /* --------------- Thermostat Database functions --------------- */
@@ -382,8 +382,8 @@ public class Pgdatabase {
         return null;
     }
 
-    public Setting getSettingBySchedule(int scheduleId) {
-
+    public List<Setting> getSettingBySchedule(int scheduleId) {
+        List<Setting> sList = new ArrayList<>();
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
@@ -400,7 +400,7 @@ public class Pgdatabase {
                 String sleep = rs.getString("sleep");
                 int sleepTemp = rs.getInt("sleepTemp");
                 Setting temp = new Setting(id, scheduleId, day, wake, wakeTemp, leave, leaveTemp, home, homeTemp, sleep, sleepTemp);
-                return temp;
+                sList.add(temp);
             }
             rs.close();
             stmt.close();
@@ -409,7 +409,7 @@ public class Pgdatabase {
         } catch(SQLException e) {
             printSQLException(e);
         }
-        return null;
+        return sList;
     }
 
     public int createSetting(Setting temp) {

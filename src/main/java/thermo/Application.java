@@ -6,7 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import thermo.database.Pgdatabase;
-import thermo.models.Thermostat;
 
 @SpringBootApplication
 public class Application {
@@ -25,7 +24,6 @@ public class Application {
             Pgdatabase.initializeDb(db_url, db_user, db_pass);
         }
 
-        Thermostat thermo = ThermostatDAO.getInstance();
 
         SpringApplication.run(Application.class, args);
 
