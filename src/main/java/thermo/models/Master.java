@@ -22,4 +22,11 @@ public class Master {
     public void addThermostat (Thermostat temp) {
         tList.add(temp);
     }
+
+    public void executeScheduleCheck() {
+        for (Thermostat thermo : tList) {
+            // Have each thermostat 
+            
+        }
+    }
 }

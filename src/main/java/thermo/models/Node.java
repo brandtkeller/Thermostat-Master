@@ -3,19 +3,22 @@ package thermo.models;
 public class Node {
     private int id;
     private String ipaddress;
+    private int port;
     private String title;
     private String type;
 
-    public Node(int id, String ip, String type) {
+    public Node(int id, String ip, int port, String type) {
         this.id = id;
         this.ipaddress = ip;
+        this.port = port;
         this.title = null;
         this.type = type;
     }
 
-    public Node(int id, String ip, String title, String type) {
+    public Node(int id, String ip, int port, String title, String type) {
         this.id = id;
         this.ipaddress = ip;
+        this.port = port;
         this.title = title;
         this.type = type;
     }
@@ -41,6 +44,14 @@ public class Node {
         this.ipaddress = ip;
     }
 
+    public int getPort() {
+        return this.port;
+    }
+
+    public void setPort( int port) {
+        this.port = port;
+    }
+
     public String getTitle() {
         return this.title;
     }
@@ -57,4 +68,12 @@ public class Node {
         this.type = type;
     }
 
+    // Add a GET request to node here?
+    public int getRequest() {
+        if (type == "airtemp") {
+            // send get request IPaddress:port/temperature
+        }
+
+        return -1;
+    }
 }

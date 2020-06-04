@@ -12,6 +12,7 @@ public class Thermostat {
     private String title;
     private int scheduleId;
     private Schedule schedule;
+    // Maybe a list of associated nodes?
 
     public Thermostat() {
 
@@ -120,4 +121,6 @@ public class Thermostat {
 
         return 0;
     }
+
+    
 }

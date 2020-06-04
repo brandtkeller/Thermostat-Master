@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import thermo.database.Pgdatabase;
+import thermo.models.Master;
 
 @SpringBootApplication
 public class Application {
@@ -32,6 +33,20 @@ public class Application {
             TimeUnit.SECONDS.sleep(5);
         }
         catch (InterruptedException e) {
+            
+        }
+        Master thermo = MasterDAO.getInstance();
+        // Handle keyboard interrupt gracefully
+        Runtime.getRuntime().addShutdownHook(new Thread() 
+        {
+            @Override
+            public void run() 
+            {
+                System.out.println("Shutting down");
+                // Enter other shutdown logic here
+            }
+        });
+        while(true) {
             
         }
 

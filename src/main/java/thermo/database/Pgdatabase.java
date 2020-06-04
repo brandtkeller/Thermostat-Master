@@ -481,10 +481,11 @@ public class Pgdatabase {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String ipaddress = rs.getString("ipAddress");
+                int port = rs.getInt("port");
                 String type = rs.getString("type");
                 // Could be a problem here getting a nmll value?
                 String title = rs.getString("title");
-                Node temp = new Node(id, ipaddress, title, type);
+                Node temp = new Node(id, ipaddress, port, title, type);
                 nList.add(temp);
             }
             rs.close();
@@ -505,10 +506,11 @@ public class Pgdatabase {
             ResultSet rs = stmt.executeQuery( "SELECT * FROM NODE WHERE ID = " + Integer.toString(id) + ";" );
             while (rs.next()) {
                 String ipaddress = rs.getString("ipAddress");
+                int port = rs.getInt("port");
                 String type = rs.getString("type");
                 // Could be a problem here getting a null value?
                 String title = rs.getString("title");
-                Node temp = new Node(id, ipaddress, title, type);
+                Node temp = new Node(id, ipaddress, port, title, type);
                 return temp;
             }
             rs.close();

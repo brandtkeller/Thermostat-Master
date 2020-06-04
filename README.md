@@ -6,6 +6,8 @@ Main backend server for the Open Thermostat integration system
 * Start-up initialization
 * Empty database management
 * Populate all models completely (via DB and REST)
+* Add thermostatId and port to node table
+* Add thermostat function to get temperatures of all assigned nodes in DB
 * Runtime logic 
 * Raspberry Pi GPIO integration
 * Multi-Master system
@@ -42,6 +44,7 @@ The system will be built to handle a mutli-hvac building. There will only be one
 * Main Application loop per each thermostat
     * GET request to temp sensor nodes assigned to thermostat object (thermostat.nodes.forEach())
     * Calculate some mean temperature value
+        * Get temperature of all nodes assigned to thermostat?
     * Compare temperature against thermostat -> currentSettingTemp (thermostat.getCurrentSettingTemp())
     * if outside threshold && state == off , activate relays based on locality and mode
         * If thermostat locality == local then activate relays locally
