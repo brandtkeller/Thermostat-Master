@@ -3,12 +3,9 @@
 Main backend server for the Open Thermostat integration system
 
 ## TO DO
-* Start-up initialization
-* Empty database management
-* Populate all models completely (via DB and REST)
-* Add thermostatId and port to node table
-* Add thermostat function to get temperatures of all assigned nodes in DB
+* Modify thermostat model to include mode and state (Update database as well)
 * Runtime logic 
+* Database error handling - IE do not allow removing schedule if assigned to a thermostat
 * Raspberry Pi GPIO integration
 * Multi-Master system
 * ARM architecture docker images

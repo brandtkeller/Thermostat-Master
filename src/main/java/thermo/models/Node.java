@@ -4,23 +4,29 @@ public class Node {
     private int id;
     private String ipaddress;
     private int port;
+    private int temperature;
     private String title;
     private String type;
+    private int thermostatId;
 
-    public Node(int id, String ip, int port, String type) {
+    public Node(int id, String ip, int port, int temperature, String type, int thermostatId) {
         this.id = id;
         this.ipaddress = ip;
         this.port = port;
+        this.temperature = temperature;
         this.title = null;
         this.type = type;
+        this.thermostatId = thermostatId;
     }
 
-    public Node(int id, String ip, int port, String title, String type) {
+    public Node(int id, String ip, int port, int temperature, String title, String type, int thermostatId) {
         this.id = id;
         this.ipaddress = ip;
         this.port = port;
+        this.temperature = temperature;
         this.title = title;
         this.type = type;
+        this.thermostatId = thermostatId;
     }
 
     @Override
@@ -68,12 +74,19 @@ public class Node {
         this.type = type;
     }
 
-    // Add a GET request to node here?
-    public int getRequest() {
-        if (type == "airtemp") {
-            // send get request IPaddress:port/temperature
-        }
+    public int getTemperature() {
+        return this.temperature;
+    }
 
-        return -1;
+    public void setTemperature(int temp) {
+        this.temperature = temp;
+    }
+
+    public int getThermostatId() {
+        return this.thermostatId;
+    }
+
+    public void setThermostatId(int id) {
+        this.thermostatId = id;
     }
 }

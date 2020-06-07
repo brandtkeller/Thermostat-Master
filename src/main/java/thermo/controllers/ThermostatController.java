@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import thermo.models.Thermostat;
 import thermo.database.*;
+import thermo.MasterDAO;
 
 public class ThermostatController {
 
@@ -56,6 +57,7 @@ public class ThermostatController {
         Pgdatabase test = Pgdatabase.getInstance();
 
         if (test.modifyThermostat(thermo)) {
+            MasterDAO.updateMaster();
             return new ResponseEntity<String>("{'data':[" + StringUtils.chop(thermo.toString()) + "]}", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Thermostat was not found", HttpStatus.NOT_FOUND);
@@ -72,6 +74,7 @@ public class ThermostatController {
         }
 
         thermo.setId(id);
+        MasterDAO.updateMaster();
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
         .path("/{id}")
@@ -90,6 +93,7 @@ public class ThermostatController {
         for (Thermostat temp : tList) {
             if (temp.getId() == Integer.parseInt(id)) {
                 if (test.removeThermostat(Integer.parseInt(id))) {
+                    MasterDAO.updateMaster();
                     return new ResponseEntity<String>("{'data':[]}", HttpStatus.NO_CONTENT);
                 } else {
                     return new ResponseEntity<String>("Problem Deleting the requested resource", HttpStatus.INTERNAL_SERVER_ERROR);

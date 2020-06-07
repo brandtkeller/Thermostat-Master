@@ -23,9 +23,9 @@ public class Master {
         tList.add(temp);
     }
 
-    public void executeScheduleCheck() {
+    public void executeThermostatCheck() {
         for (Thermostat thermo : tList) {
-            // Have each thermostat 
+            thermo.executeTemperatureCheck();
             
         }
     }

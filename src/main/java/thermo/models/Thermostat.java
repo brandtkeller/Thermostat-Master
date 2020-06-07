@@ -1,15 +1,17 @@
 package thermo.models;
 
+import thermo.database.Pgdatabase;
 
 public class Thermostat {
     private int id;
-    private int currentTemp;
-    private int setTemp;
-    private int threshold;
-    private boolean fan;
-    private String mode;
-    private boolean state;
-    private String title;
+    private int currentTemp; // This should not be needed
+    private int setTemp; // Cached setting temperature until settingEndTime
+    private String settingEndTime;
+    private int threshold; // 3 or 4
+    private boolean fan; // 
+    private String mode; // 'heat', 'cool', "off"
+    private boolean state; // true = on, false = off
+    private String title; 
     private int scheduleId;
     private Schedule schedule;
     // Maybe a list of associated nodes?
@@ -103,23 +105,36 @@ public class Thermostat {
 
     
     /* ---------- Main loop logic ---------- */
-    public int getCurrentTempSetting() {
-        // Get currentDay
-        // Get currentTime
-        // if thermostat.currentSettingEndTime == null || thermostat.currentSettingEndTime < currentTime 
-            // Get all settings from schedule
-            // get setting for current day
-            // if current time < wake
-                // thermostat.currentSettingTemp = previous day sleep
-                // thermostat.currentSettingEndTime = current day wake
-            // else
-                // thermostat.currentSettingTemp = current day wake
-                // thermostat.currentSettingEndTime = current day leave
-            // return currentSettingTemp
-        // else
-            // return currentSettingTemp
+    public void executeTemperatureCheck() {
 
-        return 0;
+        // If mode == 'off' - Do nothing
+
+        int setTemp = schedule.getCurrentSettingTemp();
+        System.out.println("Current set Temperature is: " + setTemp);
+        
+        // We now have the current set temperature
+        // Compare against node mean temperature
+        Pgdatabase db = Pgdatabase.getInstance();
+        int meanTemp = db.getAllNodeTempsByThermostat(this.id);
+        if (meanTemp == -1) {
+            System.out.println("No nodes with temperature updates to utilize.");
+        } else {
+            System.out.println("Mean temperature is : " + meanTemp);
+        }
+
+        // If mode == heat
+            // If (setTemp - meanTemp) > threshold && state == false
+                // activate Heat and Fan Relays
+            // If (meanTemp - setTemp) > (threshold - 1) && state == true
+                // de-activate Heat and Fan Relays
+            // Otherwise do nothing
+
+        // If mode == cool
+            // If (meanTemp - setTemp) > threshold && state == false
+                // activate Cool and Fan Relays
+            // If (setTemp - meanTemp) > (threshold - 1) && state == true
+                // de-activate Cool and Fan Relays
+            // Otherwise do nothing
     }
 
     

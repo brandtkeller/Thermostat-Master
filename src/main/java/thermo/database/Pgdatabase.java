@@ -35,7 +35,7 @@ public class Pgdatabase {
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS setting (id SERIAL PRIMARY KEY, Day VARCHAR(255), Scheduleid SERIAL," +
             " Wake VARCHAR(255), WakeTemp INT, Leave VARCHAR(255), LeaveTemp INT," +
             " Home VARCHAR(255), HomeTemp INT, Sleep VARCHAR(255), SleepTemp INT);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS node (id SERIAL PRIMARY KEY, Title VARCHAR(255), ipAddress VARCHAR(255), Type VARCHAR(255));");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS node (id SERIAL PRIMARY KEY, Title VARCHAR(255), ipAddress VARCHAR(255), port INT, Temperature INT, Type VARCHAR(255), ThermostatId SERIAL);");
             
 
             // If there are no thermostats, then we need to create whole stack
@@ -59,6 +59,9 @@ public class Pgdatabase {
                 "('Thu', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
                 "('Fri', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
                 "('Sat', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55);");
+
+                // Test code for initial testing purposes TODO: Remove
+                stmt.executeUpdate("INSERT INTO node (Title, ipAddress, port, Temperature, Type, ThermostatId) VALUES ('Test', 'localhost', '6666', '70','airtemp', '1');");
             }
             
             stmt.close();
@@ -120,8 +123,9 @@ public class Pgdatabase {
                 // Do something here to handle
             }
             // Get length of the setting list and ensure there are 7
-
-            sched.setSettingList(getSettingBySchedule(sched.getId()));
+            List<Setting> settings = getSettingsBySchedule(sched.getId());
+            sched.setSettingList(settings);
+            sched.getCurrentSetting();
             temp.setSchedule(sched);
             
         }
@@ -182,7 +186,7 @@ public class Pgdatabase {
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery( "INSERT INTO THERMOSTAT (TITLE,THRESHOLD) "
-            + "VALUES (" + temp.getTitle() + ", " + temp.getThreshold() + " RETURNING ID);" );
+            + "VALUES (" + temp.getTitle() + ", " + temp.getThreshold() + ") RETURNING ID);" );
             rs.next();
             int id = rs.getInt("id");
             rs.close();
@@ -251,7 +255,6 @@ public class Pgdatabase {
     }
 
     public Schedule getScheduleById(int id) {
-
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
@@ -259,6 +262,7 @@ public class Pgdatabase {
             while (rs.next()) {
                 String  title = rs.getString("title");
                 Schedule temp = new Schedule(id, title);
+
                 return temp;
             }
             rs.close();
@@ -276,7 +280,7 @@ public class Pgdatabase {
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery( "INSERT INTO Schedule (TITLE) "
-            + "VALUES (" + temp.getTitle() + " RETURNING ID);" );
+            + "VALUES (" + temp.getTitle() + ") RETURNING ID);" );
             rs.next();
             int id = rs.getInt("id");
             rs.close();
@@ -382,7 +386,7 @@ public class Pgdatabase {
         return null;
     }
 
-    public List<Setting> getSettingBySchedule(int scheduleId) {
+    public List<Setting> getSettingsBySchedule(int scheduleId) {
         List<Setting> sList = new ArrayList<>();
         Connection conn = connect(); 
         try {
@@ -422,7 +426,7 @@ public class Pgdatabase {
             + temp.getLeaveTime() +  ", " + temp.getLeaveTemp() +  ", " 
             + temp.getHomeTime() +  ", " + temp.getHomeTemp() +  ", " 
             + temp.getSleepTime() +  ", " + temp.getSleepTemp() +  
-            " RETURNING ID);" );
+            ") RETURNING ID);" );
             rs.next();
             int id = rs.getInt("id");
             rs.close();
@@ -482,10 +486,12 @@ public class Pgdatabase {
                 int id = rs.getInt("id");
                 String ipaddress = rs.getString("ipAddress");
                 int port = rs.getInt("port");
+                int temperature = rs.getInt("temperature");
                 String type = rs.getString("type");
                 // Could be a problem here getting a nmll value?
                 String title = rs.getString("title");
-                Node temp = new Node(id, ipaddress, port, title, type);
+                int thermoId = rs.getInt("thermostatId");
+                Node temp = new Node(id, ipaddress, port, temperature, title, type, thermoId);
                 nList.add(temp);
             }
             rs.close();
@@ -507,10 +513,12 @@ public class Pgdatabase {
             while (rs.next()) {
                 String ipaddress = rs.getString("ipAddress");
                 int port = rs.getInt("port");
+                int temperature = rs.getInt("temperature");
                 String type = rs.getString("type");
-                // Could be a problem here getting a null value?
+                // Could be a problem here getting a nmll value?
                 String title = rs.getString("title");
-                Node temp = new Node(id, ipaddress, port, title, type);
+                int thermoId = rs.getInt("thermostatId");
+                Node temp = new Node(id, ipaddress, port, temperature, title, type, thermoId);
                 return temp;
             }
             rs.close();
@@ -527,9 +535,9 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "INSERT INTO Node (IPADDRESS, TYPE, TITLE) "
-            + "VALUES (" + temp.getIp() + ", " + temp.getType() + ", " + temp.getTitle() +
-            " RETURNING ID);" );
+            ResultSet rs = stmt.executeQuery( "INSERT INTO Node (Title, ipAddress, port, Temperature, Type, ThermostatId) "
+            + "VALUES (" + temp.getTitle() + ", " + temp.getIp() + ", " + temp.getPort() + ", " + temp.getTemperature() + ", " + temp.getType() + ", " + temp.getThermostatId() +
+            ") RETURNING ID);" );
             rs.next();
             int id = rs.getInt("id");
             rs.close();
@@ -547,7 +555,7 @@ public class Pgdatabase {
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery( "UPDATE Node set IPADDRESS = " + temp.getIp() + ", TYPE = " + temp.getType() + ", TITLE = " 
-            + temp.getTitle() + " where ID = " + temp.getId() + ";" );
+            + temp.getTitle() + ", TEMPERATURE = " + temp.getTemperature() + ", THERMOSTATID = " + temp.getThermostatId() + " where ID = " + temp.getId() + ";" );
             rs.close();
             stmt.close();
             conn.close();
@@ -571,6 +579,34 @@ public class Pgdatabase {
             printSQLException(e);
         }
         return false;
+    }
+
+    /* Node temperature bias/ mean average logic */
+
+    public int getAllNodeTempsByThermostat(int thermoId) {
+        Connection conn = connect(); 
+        
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM NODE WHERE THERMOSTATID = " + Integer.toString(thermoId) + ";" );
+            int temperature = 0;
+            int count = 0;
+            while (rs.next()) {
+                temperature += rs.getInt("temperature");
+                count++;
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+            if (count == 0) {
+                return -1;
+            }
+            return temperature / count;
+
+        } catch(SQLException e) {
+            printSQLException(e);
+        }
+        return -1;
     }
 
     /*--------------- SQL Exception functions for logging --------------- */

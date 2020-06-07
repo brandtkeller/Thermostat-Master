@@ -19,5 +19,13 @@ public class MasterDAO {
         return instance;
     }
 
-    
+    // Since the number of calls is minimal, we can call db.init(). This can be improved to only update necessary objects
+    public static void updateMaster() {
+        if (instance == null) {
+            getInstance();
+        } else {
+            Pgdatabase db = Pgdatabase.getInstance();
+            instance.setThermostats(db.init());
+        }
+    }
 }
