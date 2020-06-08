@@ -30,7 +30,7 @@ public class Pgdatabase {
             Statement stmt = conn.createStatement();
 
             // DB Table initialization
-            stmt.executeUpdate( "CREATE TABLE IF NOT EXISTS thermostat (id SERIAL PRIMARY KEY, Title VARCHAR(255), Threshold INT, Scheduleid SERIAL);" );
+            stmt.executeUpdate( "CREATE TABLE IF NOT EXISTS thermostat (id SERIAL PRIMARY KEY, Title VARCHAR(255), Threshold INT, Scheduleid SERIAL, Mode VARCHAR(255));" );
             stmt.executeUpdate( "CREATE TABLE IF NOT EXISTS schedule (id SERIAL PRIMARY KEY, Title VARCHAR(255));" );
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS setting (id SERIAL PRIMARY KEY, Day VARCHAR(255), Scheduleid SERIAL," +
             " Wake VARCHAR(255), WakeTemp INT, Leave VARCHAR(255), LeaveTemp INT," +
@@ -48,8 +48,8 @@ public class Pgdatabase {
                 rs.next();
                 int schedId = rs.getInt("id");
                 rs.close();
-                stmt.executeUpdate("INSERT INTO thermostat (Title, Threshold, Scheduleid) " +
-                "VALUES ('Master', 3, " + schedId + ");");
+                stmt.executeUpdate("INSERT INTO thermostat (Title, Threshold, Scheduleid, Mode) " +
+                "VALUES ('Master', 3, " + schedId + ", 'Heat');");
                 
                 stmt.executeUpdate("INSERT INTO Setting (DAY, SCHEDULEID, WAKE, WAKETEMP, LEAVE, LEAVETEMP, HOME, HOMETEMP, SLEEP, SLEEPTEMP)" +
                 " VALUES ('Sun', "+ schedId +", '06:00:00', 65, '09:00:00', 60, '15:00:00', 70, '19:00:00', 55)," +
@@ -145,7 +145,8 @@ public class Pgdatabase {
                 String  title = rs.getString("title");
                 int threshold = rs.getInt("threshold");
                 int scheduleId = rs.getInt("scheduleId");
-                Thermostat temp = new Thermostat(id, threshold, title, scheduleId);
+                String mode = rs.getString("mode");
+                Thermostat temp = new Thermostat(id, threshold, title, scheduleId, mode);
                 tList.add(temp);
             }
             rs.close();
@@ -168,7 +169,8 @@ public class Pgdatabase {
                 String  title = rs.getString("title");
                 int threshold = rs.getInt("threshold");
                 int scheduleId = rs.getInt("scheduleId");
-                Thermostat temp = new Thermostat(id, threshold, title, scheduleId);
+                String mode = rs.getString("mode");
+                Thermostat temp = new Thermostat(id, threshold, title, scheduleId, mode);
                 return temp;
             }
             rs.close();
@@ -185,8 +187,8 @@ public class Pgdatabase {
         Connection conn = connect(); 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( "INSERT INTO THERMOSTAT (TITLE,THRESHOLD) "
-            + "VALUES (" + temp.getTitle() + ", " + temp.getThreshold() + ") RETURNING ID);" );
+            ResultSet rs = stmt.executeQuery( "INSERT INTO THERMOSTAT (TITLE,THRESHOLD, SCHEDULEID, MODE) "
+            + "VALUES (" + temp.getTitle() + ", " + temp.getThreshold() + ", " + temp.getScheduleId() + ", " + temp.getMode() + ") RETURNING ID);" );
             rs.next();
             int id = rs.getInt("id");
             rs.close();
@@ -204,7 +206,8 @@ public class Pgdatabase {
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery( "UPDATE THERMOSTAT set title = " + temp.getTitle() + " AND threshold = " 
-            + temp.getThreshold() + " where ID=" + temp.getId() + ";" );
+            + temp.getThreshold() + " AND scheduleId = " + temp.getScheduleId() + 
+            " AND mode = " + temp.getMode() + " where ID=" + temp.getId() + ";" );
             rs.close();
             stmt.close();
             conn.close();
