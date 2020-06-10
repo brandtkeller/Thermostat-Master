@@ -3,11 +3,13 @@
 Main backend server for the Open Thermostat integration system
 
 ## TO DO
-* Modify thermostat model to include mode and state (Update database as well)
+* Modify thermostat model to include locality and address
 * Runtime logic 
 * Database error handling - IE do not allow removing schedule if assigned to a thermostat
 * Raspberry Pi GPIO integration
-* Multi-Master system
+* Multi-thermostat system
+    * Have a separate jar for remote relay operation
+    * all secondary thermostats are stateless
 * ARM architecture docker images
 * Docker -> Postgres connection docker environment variables
 

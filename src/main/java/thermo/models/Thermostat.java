@@ -8,9 +8,12 @@ public class Thermostat {
     // private int setTemp; // Cached setting temperature until settingEndTime
     // private String settingEndTime;
     private int threshold; // 3 or 4
-    private boolean fan; // 
+    private boolean fan; //
+    private boolean fanState;
     private String mode; // 'heat', 'cool', "off"
     private boolean state; // true = on, false = off
+    private String locality; // local or remote
+    private String address; // Ip address
     private String title; 
     private int scheduleId;
     private Schedule schedule;
@@ -32,6 +35,7 @@ public class Thermostat {
         this.mode = mode;
         // By default the state will be false. Need to have some pin cleanup
         this.state = false;
+        this.fanState = false;
     }
 
     // This should return the stringified version of the JSON API spec object for data
@@ -157,6 +161,8 @@ public class Thermostat {
             }
         } else {
             System.out.println("Thermostat mode is set to off.");
+            // TODO: we need to deactivate any relays currently on. Can we simply call de-activate on non-running pins?
+            // Or do we need to create an object to maintain state?
         }
     }
 
