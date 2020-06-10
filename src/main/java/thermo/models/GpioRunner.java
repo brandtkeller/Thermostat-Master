@@ -1,4 +1,4 @@
-package thermo;
+package thermo.models;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -15,17 +15,23 @@ import java.util.Hashtable;
 import com.pi4j.component.temperature.TemperatureSensor;
 
 public class GpioRunner {
-    static Hashtable<Integer, GpioPinDigitalOutput> output_dict = new Hashtable<Integer, GpioPinDigitalOutput>();
-    static Hashtable<Integer, Pin> pin_dict = new Hashtable<Integer, Pin>();
+    private Hashtable<Integer, GpioPinDigitalOutput> output_dict = new Hashtable<Integer, GpioPinDigitalOutput>();
+    private Hashtable<Integer, Pin> pin_dict = new Hashtable<Integer, Pin>();
+    private Hashtable<Integer, Boolean> state_dict = new Hashtable<Integer, Boolean>();
 
-    public static void initializeGPIO() {
+
+    public void initializeGPIO() {
         // Add pre-configured pins to the initialization 
         pin_dict.put(1, RaspiPin.GPIO_00); // Fan relay
         pin_dict.put(2, RaspiPin.GPIO_02); // Heat relay
         pin_dict.put(3, RaspiPin.GPIO_03); // Cool relay
+
+        state_dict.put(1, false);
+        state_dict.put(2, false);
+        state_dict.put(3, false);
     }
 
-    public static void activateRelay(int relayPin) {
+    public void activateRelay(int relayPin) {
         GpioUtil.enableNonPrivilegedAccess();
         final GpioController gpioRelay = GpioFactory.getInstance();
         GpioPinDigitalOutput relay = null;
@@ -39,7 +45,7 @@ public class GpioRunner {
         relay.low(); // ON
     }
 
-    public static void deactivateRelay(int relayPin) {
+    public void deactivateRelay(int relayPin) {
         GpioUtil.enableNonPrivilegedAccess();
         final GpioController gpioRelay = GpioFactory.getInstance();
         GpioPinDigitalOutput relay = null;
@@ -54,7 +60,7 @@ public class GpioRunner {
 
     }
     
-    public static double getTemperature(){
+    public double getTemperature(){
 		
         W1Master w1Master = new W1Master();
 

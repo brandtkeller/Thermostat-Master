@@ -35,7 +35,7 @@ public class Application {
         catch (InterruptedException e) {
             
         }
-        Master thermo = MasterDAO.getInstance();
+        Master thermo = MasterDAO.getMasterInstance();
         // Handle keyboard interrupt gracefully
         Runtime.getRuntime().addShutdownHook(new Thread() 
         {

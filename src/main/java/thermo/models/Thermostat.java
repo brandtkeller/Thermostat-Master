@@ -2,6 +2,8 @@ package thermo.models;
 
 import thermo.database.Pgdatabase;
 
+import com.pi4j.wiringpi.Gpio;
+
 public class Thermostat {
     private int id;
     private int currentTemp; // This should not be needed
