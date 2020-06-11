@@ -11,8 +11,7 @@ public class Setting {
     private String home;
     private int homeTemp;
     private String sleep;
-    private int sleepTemp;    
-
+    private int sleepTemp;
 
     public Setting(int id, int scheduleId, String day, String wake, int wt, String leave, int lt, String home, int ht, String sleep, int st) {
         this.id = id;
@@ -26,6 +25,16 @@ public class Setting {
         this.homeTemp = ht;
         this.sleep = sleep;
         this.sleepTemp = st;
+    }
+
+    @Override
+    public String toString() { 
+        return String.format("{'type':'setting','id':'" + id + "','attributes':{'day':'" + day + 
+        "','wake':'" + wake + "','wakeTemp':'" + wakeTemp +
+        "','leave':'" + leave + "','leaveTemp':'" + leaveTemp +
+        "','home':'" + home + "','homeTemp':'" + homeTemp +
+        "','sleep':'" + sleep + "','sleepTemp':'" + sleepTemp +
+        "'}},"); 
     }
     
     public int getId() {

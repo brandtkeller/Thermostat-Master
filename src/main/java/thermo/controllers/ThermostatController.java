@@ -16,18 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.apache.commons.lang3.StringUtils;
 
-import thermo.ThermostatDAO;
 import thermo.models.Thermostat;
 import thermo.database.*;
+import thermo.MasterDAO;
 
 public class ThermostatController {
-    Thermostat thermo = ThermostatDAO.getInstance();
 
     // Get all thermostat objects
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getThermostats() {
         String response = "{'data':[";
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
 
         List<Thermostat> tList = test.getAllThermostats();
 
@@ -43,7 +42,7 @@ public class ThermostatController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> getThermostat(@PathVariable("id") String id) { 
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
         Thermostat temp = test.getThermostatById(Integer.parseInt(id));
 
         if (temp != null) {
@@ -55,9 +54,10 @@ public class ThermostatController {
 
     @PutMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> putThermostat(@PathVariable("id") String id, @RequestBody Thermostat thermo) { 
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
 
         if (test.modifyThermostat(thermo)) {
+            MasterDAO.updateMaster();
             return new ResponseEntity<String>("{'data':[" + StringUtils.chop(thermo.toString()) + "]}", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Thermostat was not found", HttpStatus.NOT_FOUND);
@@ -66,7 +66,7 @@ public class ThermostatController {
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> addThermostat(@RequestBody Thermostat thermo) {
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
         int id = test.createThermostat(thermo);
 
         if (id == -1) {
@@ -74,6 +74,7 @@ public class ThermostatController {
         }
 
         thermo.setId(id);
+        MasterDAO.updateMaster();
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
         .path("/{id}")
@@ -85,13 +86,14 @@ public class ThermostatController {
 
     @DeleteMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> deleteThermostat(@PathVariable("id") String id) { 
-        Pgdatabase test = new Pgdatabase();
+        Pgdatabase test = Pgdatabase.getInstance();
 
         List<Thermostat> tList = test.getAllThermostats();
 
         for (Thermostat temp : tList) {
             if (temp.getId() == Integer.parseInt(id)) {
                 if (test.removeThermostat(Integer.parseInt(id))) {
+                    MasterDAO.updateMaster();
                     return new ResponseEntity<String>("{'data':[]}", HttpStatus.NO_CONTENT);
                 } else {
                     return new ResponseEntity<String>("Problem Deleting the requested resource", HttpStatus.INTERNAL_SERVER_ERROR);
