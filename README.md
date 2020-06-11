@@ -3,10 +3,12 @@
 Main backend server for the Open Thermostat integration system
 
 ## TO DO
-* Convert GpioRunner to an object class
+* Add instance getters to masterDAO for db and gpio
+* Could thermostat have a 'fan' mode? 
 * When a thermostat object is updated (fan toggle), we are not updating in-place
     * GPIO logic could be handled by a single instance of a model
-    * Thermostat logic needs to handle immutable state without knowing what happened prior
+    * Thermostat logic needs to handle immutable state without knowing what happened prior or modify thermostat objects in place.
+* POST thermostat should have a masterDAO function for adding to the Master object
 * Modify thermostat model to include locality and address
 * Database error handling - IE do not allow removing schedule if assigned to a thermostat
 * Raspberry Pi GPIO integration

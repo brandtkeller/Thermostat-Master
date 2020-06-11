@@ -10,8 +10,6 @@ public class Thermostat {
     // private int setTemp; // Cached setting temperature until settingEndTime
     // private String settingEndTime;
     private int threshold; // 3 or 4
-    private boolean fan; //
-    private boolean fanState;
     private String mode; // 'heat', 'cool', "off"
     private boolean state; // true = on, false = off
     private String locality; // local or remote
@@ -25,7 +23,6 @@ public class Thermostat {
         // Initial default values for testing
         this.currentTemp = 70;
         this.threshold = 3;
-        this.fan = false;
         this.schedule = null;
     }
 
@@ -37,7 +34,6 @@ public class Thermostat {
         this.mode = mode;
         // By default the state will be false. Need to have some pin cleanup
         this.state = false;
-        this.fanState = false;
     }
 
     // This should return the stringified version of the JSON API spec object for data
@@ -60,14 +56,6 @@ public class Thermostat {
 
     public void setCurrentTemp(int ct) {
         this.currentTemp = ct;
-    }
-
-    public boolean getFan() {
-        return this.fan;
-    }
-
-    public void setFan(boolean fan) {
-        this.fan = fan;
     }
 
     public String getMode() {
@@ -160,6 +148,10 @@ public class Thermostat {
                     System.out.println("De-activating the relays");
                     this.state = false;
                 }
+            }
+
+            if (this.mode == "Fan") {
+                // Turn on the fan?
             }
         } else {
             System.out.println("Thermostat mode is set to off.");
