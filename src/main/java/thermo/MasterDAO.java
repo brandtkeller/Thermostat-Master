@@ -49,12 +49,37 @@ public class MasterDAO {
     }
 
     // Since the number of calls is minimal, we can call db.init(). This can be improved to only update necessary objects
+    // This can be removed after adding more specific update functionality
     public static void updateMaster() {
         if (mInstance == null) {
             getMasterInstance();
         } else {
             Pgdatabase db = getDatabaseInstance();
             mInstance.setThermostats(db.init());
+        }
+    }
+
+    public static void addThermostatToMaster(Thermostat temp) {
+        if (mInstance == null) {
+            getMasterInstance();
+        } else {
+            mInstance.addThermostat(temp);
+        }
+    }
+
+    public static void removeThermostatFromMaster(int id) {
+        if (mInstance == null) {
+            getMasterInstance();
+        } else {
+            mInstance.removeThermostat(id);
+        }
+    }
+
+    public static void modifyThermostatOnMaster(Thermostat temp) {
+        if (mInstance == null) {
+            getMasterInstance();
+        } else {
+            mInstance.modifyThermostat(temp);
         }
     }
     

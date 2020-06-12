@@ -13,7 +13,9 @@ Info@brandtkeller.net
 
 ## TO DO
 * In-place updates
-* POST thermostat should have a masterDAO function for adding to the Master object
+    * POST thermostat - Add to Master object via MasterDAO
+    * PUT thermostat - should find thermostat and call executeTemperatureCheck() 
+    * DELETE thermostat - Remove from Master object via MasterDAO
 * Modify thermostat model to include locality and address
 * Database error handling - IE do not allow removing schedule if assigned to a thermostat
 * Raspberry Pi GPIO integration
