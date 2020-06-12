@@ -17,7 +17,7 @@ public class MasterDAO {
         if (mInstance == null) {
             Pgdatabase db = getDatabaseInstance();
             mInstance = new Master();
-            mInstance.setThermostats(db.init());
+            mInstance.setThermostats(db.getAllThermostats());
         }
         return mInstance;
     }
@@ -55,7 +55,7 @@ public class MasterDAO {
             getMasterInstance();
         } else {
             Pgdatabase db = getDatabaseInstance();
-            mInstance.setThermostats(db.init());
+            mInstance.setThermostats(db.getAllThermostats());
         }
     }
 

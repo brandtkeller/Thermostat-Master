@@ -33,6 +33,15 @@ public class Thermostat {
         this.mode = mode;
         // By default the state will be false. Need to have some pin cleanup
         this.state = false;
+        Pgdatabase db = MasterDAO.getDatabaseInstance();
+        Schedule sched = db.getScheduleById(id);
+        if (sched == null) {
+            System.out.println("Failed to get schedule for thermostat");
+            // Do something here to handle
+        }
+        sched.setSettingList(db.getSettingsBySchedule(sched.getId()));
+        sched.getCurrentSetting();
+        setSchedule(sched);
     }
 
     // This should return the stringified version of the JSON API spec object for data

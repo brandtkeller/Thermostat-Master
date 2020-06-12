@@ -96,30 +96,6 @@ public class Pgdatabase {
         return conn;
     }
 
-    /* --------------- Thermostat Initialization ---------------*/
-
-    public List<Thermostat> init() {
-        List<Thermostat> tList = new ArrayList<>();
-        
-        tList = getAllThermostats();
-
-        for (Thermostat temp : tList) {
-            // Now get schedule by ID and assign to Thermostat
-            Schedule sched = getScheduleById(temp.getScheduleId());
-            if (sched == null) {
-                System.out.println("Failed to get schedule for thermostat");
-                // Do something here to handle
-            }
-            // Get length of the setting list and ensure there are 7
-            List<Setting> settings = getSettingsBySchedule(sched.getId());
-            sched.setSettingList(settings);
-            sched.getCurrentSetting();
-            temp.setSchedule(sched);
-            
-        }
-        return tList;
-    }
-
     /* --------------- Thermostat Database functions --------------- */
 
     public List<Thermostat> getAllThermostats() {
