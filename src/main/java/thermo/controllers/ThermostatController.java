@@ -26,7 +26,7 @@ public class ThermostatController {
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getThermostats() {
         String response = "{'data':[";
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Thermostat> tList = test.getAllThermostats();
 
@@ -42,7 +42,7 @@ public class ThermostatController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> getThermostat(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         Thermostat temp = test.getThermostatById(Integer.parseInt(id));
 
         if (temp != null) {
@@ -54,7 +54,7 @@ public class ThermostatController {
 
     @PutMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> putThermostat(@PathVariable("id") String id, @RequestBody Thermostat thermo) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         if (test.modifyThermostat(thermo)) {
             MasterDAO.updateMaster();
@@ -66,7 +66,7 @@ public class ThermostatController {
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> addThermostat(@RequestBody Thermostat thermo) {
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         int id = test.createThermostat(thermo);
 
         if (id == -1) {
@@ -86,7 +86,7 @@ public class ThermostatController {
 
     @DeleteMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> deleteThermostat(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Thermostat> tList = test.getAllThermostats();
 

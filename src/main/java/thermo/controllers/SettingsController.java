@@ -27,7 +27,7 @@ public class SettingsController {
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getSettings() {
         String response = "{'data':[";
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Setting> tList = test.getAllSettings();
 
@@ -43,7 +43,7 @@ public class SettingsController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> getSetting(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         Setting temp = test.getSettingById(Integer.parseInt(id));
 
         if (temp != null) {
@@ -55,7 +55,7 @@ public class SettingsController {
     
     @PutMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> putSetting(@PathVariable("id") String id, @RequestBody Setting thermo) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         if (test.modifySetting(thermo)) {
             MasterDAO.updateMaster();
@@ -67,7 +67,7 @@ public class SettingsController {
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> addSetting(@RequestBody Setting thermo) {
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         int id = test.createSetting(thermo);
 
         if (id == -1) {
@@ -87,7 +87,7 @@ public class SettingsController {
 
     @DeleteMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> deleteSetting(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Setting> tList = test.getAllSettings();
 

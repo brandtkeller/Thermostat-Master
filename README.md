@@ -2,12 +2,17 @@
 
 Main backend server for the Open Thermostat integration system
 
+## Updates
+This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
+Activity there may be more recent as updates are only pushed to github during merge to master.
+
+If you would like more information on updates, please reach out to:
+```
+Info@brandtkeller.net
+```
+
 ## TO DO
-* Add instance getters to masterDAO for db and gpio
-* Could thermostat have a 'fan' mode? 
-* When a thermostat object is updated (fan toggle), we are not updating in-place
-    * GPIO logic could be handled by a single instance of a model
-    * Thermostat logic needs to handle immutable state without knowing what happened prior or modify thermostat objects in place.
+* In-place updates
 * POST thermostat should have a masterDAO function for adding to the Master object
 * Modify thermostat model to include locality and address
 * Database error handling - IE do not allow removing schedule if assigned to a thermostat
@@ -20,14 +25,13 @@ Main backend server for the Open Thermostat integration system
 * ARM architecture docker images
 * Docker -> Postgres connection docker environment variables
 
-## Updates
-This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
-Activity there may be more recent as updates are only pushed to github during merge to master.
+## Possible Capabilities
+* In-place updates for the thermostat objects
+    * This includes schedules and settings
+* Instant change
+    * If we toggle a setting on the UI, have the change reflected instantly rather than during the next schedule loop
+    * How does this logic work beside initial startup/ restart logic?
 
-If you would like more information on updates, please reach out to:
-```
-Info@brandtkeller.net
-```
 
 ## Standard Communication
 

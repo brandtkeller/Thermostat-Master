@@ -27,7 +27,7 @@ public class ScheduleController {
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getSchedules() {
         String response = "{'data':[";
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Schedule> tList = test.getAllSchedules();
 
@@ -43,7 +43,7 @@ public class ScheduleController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> getSchedule(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         Schedule temp = test.getScheduleById(Integer.parseInt(id));
 
         if (temp != null) {
@@ -55,7 +55,7 @@ public class ScheduleController {
     
     @PutMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> putSchedule(@PathVariable("id") String id, @RequestBody Schedule thermo) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         if (test.modifySchedule(thermo)) {
             MasterDAO.updateMaster();
@@ -67,7 +67,7 @@ public class ScheduleController {
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> addSchedule(@RequestBody Schedule thermo) {
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         int id = test.createSchedule(thermo);
 
         if (id == -1) {
@@ -87,7 +87,7 @@ public class ScheduleController {
 
     @DeleteMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> deleteSchedule(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Schedule> tList = test.getAllSchedules();
 
