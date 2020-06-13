@@ -58,7 +58,7 @@ public class ScheduleController {
         Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         if (test.modifySchedule(thermo)) {
-            MasterDAO.updateMaster();
+            MasterDAO.modifyScheduleOnMaster(thermo);
             return new ResponseEntity<String>("{'data':[" + StringUtils.chop(thermo.toString()) + "]}", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Schedule was not found", HttpStatus.NOT_FOUND);
@@ -75,7 +75,6 @@ public class ScheduleController {
         }
 
         thermo.setId(id);
-        MasterDAO.updateMaster();
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
         .path("/{id}")
@@ -93,11 +92,14 @@ public class ScheduleController {
 
         for (Schedule temp : tList) {
             if (temp.getId() == Integer.parseInt(id)) {
-                if (test.removeThermostat(Integer.parseInt(id))) {
-                    MasterDAO.updateMaster();
-                    return new ResponseEntity<String>("{'data':[]}", HttpStatus.NO_CONTENT);
+                if (MasterDAO.removeScheduleFromMaster(Integer.parseInt(id))){
+                    if (test.removeSchedule(Integer.parseInt(id))) {
+                        return new ResponseEntity<String>("{'data':[]}", HttpStatus.NO_CONTENT);
+                    } else {
+                        return new ResponseEntity<String>("Problem Deleting the requested resource", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
                 } else {
-                    return new ResponseEntity<String>("Problem Deleting the requested resource", HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<String>("Schedule is assigned to thermostat, remove assignment before deleting", HttpStatus.BAD_REQUEST);
                 }
             }
         }

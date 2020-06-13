@@ -13,9 +13,9 @@ Info@brandtkeller.net
 
 ## TO DO
 * In-place updates
-    * POST thermostat - Add to Master object via MasterDAO
-    * PUT thermostat - should find thermostat and call executeTemperatureCheck() 
-    * DELETE thermostat - Remove from Master object via MasterDAO
+    * Settings
+        * We can see if the schedule for the settings is on the master and update them.
+        * The above will handle instant changes. 
 * Modify thermostat model to include locality and address
 * Database error handling - IE do not allow removing schedule if assigned to a thermostat
 * Raspberry Pi GPIO integration

@@ -46,6 +46,32 @@ public class Master {
                 // Instant response to change
                 temp.executeTemperatureCheck();
             }
+        } 
+    }
+
+    public boolean removeSchedule( int id ) {
+        ListIterator<Thermostat> itr = tList.listIterator();
+        while (itr.hasNext()) 
+        { 
+            Thermostat x = itr.next();
+            if (x.getScheduleId() == id) {
+                return false;
+            }
+        }
+        return true; 
+    }
+
+    public void modifySchedule(Schedule temp) {
+        ListIterator<Thermostat> itr = tList.listIterator();
+        int id = temp.getId();
+        while (itr.hasNext()) 
+        { 
+            Thermostat x = itr.next();
+            if (x.getScheduleId() == id) {
+                x.setSchedule(temp);
+                // Instant response to change
+                x.executeTemperatureCheck();
+            }
                 
         } 
     }

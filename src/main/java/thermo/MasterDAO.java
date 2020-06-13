@@ -62,25 +62,36 @@ public class MasterDAO {
     public static void addThermostatToMaster(Thermostat temp) {
         if (mInstance == null) {
             getMasterInstance();
-        } else {
-            mInstance.addThermostat(temp);
         }
+        mInstance.addThermostat(temp);
     }
 
     public static void removeThermostatFromMaster(int id) {
         if (mInstance == null) {
             getMasterInstance();
-        } else {
-            mInstance.removeThermostat(id);
         }
+        mInstance.removeThermostat(id);
     }
 
     public static void modifyThermostatOnMaster(Thermostat temp) {
         if (mInstance == null) {
             getMasterInstance();
-        } else {
-            mInstance.modifyThermostat(temp);
+        } 
+        mInstance.modifyThermostat(temp);
+    }
+
+    public static void modifyScheduleOnMaster(Schedule temp) {
+        if (mInstance == null) {
+            getMasterInstance();
         }
+        mInstance.modifySchedule(temp);
+    }
+
+    public static boolean removeScheduleFromMaster(int id) {
+        if (mInstance == null) {
+            getMasterInstance();
+        }
+        return mInstance.removeSchedule(id);
     }
     
     // Add functionality to update thermostat objects in-place

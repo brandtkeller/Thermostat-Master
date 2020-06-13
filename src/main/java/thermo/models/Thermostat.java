@@ -37,11 +37,10 @@ public class Thermostat {
         Schedule sched = db.getScheduleById(id);
         if (sched == null) {
             System.out.println("Failed to get schedule for thermostat");
-            // Do something here to handle
+        } else {
+            setSchedule(sched);
         }
-        sched.setSettingList(db.getSettingsBySchedule(sched.getId()));
-        sched.getCurrentSetting();
-        setSchedule(sched);
+        
     }
 
     // This should return the stringified version of the JSON API spec object for data
@@ -95,6 +94,9 @@ public class Thermostat {
     }
 
     public void setSchedule(Schedule schedule) {
+        Pgdatabase db = MasterDAO.getDatabaseInstance();
+        schedule.setSettingList(db.getSettingsBySchedule(schedule.getId()));
+        schedule.getCurrentSetting();
         this.schedule = schedule;
     }
 
