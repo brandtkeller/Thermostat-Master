@@ -2,7 +2,7 @@
 
 Main backend server for the Open Thermostat integration system
 
-## Updates
+## Update Notice
 This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
 Activity there may be more recent as updates are only pushed to github during merge to master.
 
@@ -13,10 +13,12 @@ Info@brandtkeller.net
 
 ## TO DO
 * In-place updates
-    * Settings
-        * We can see if the schedule for the settings is on the master and update them.
-        * The above will handle instant changes. 
+    * POST /Schedules should create a schedule and all 7 settings
+    * schedule object should initialize a schedule with settings
+    * PUT /Settings/{id} should create schedule object and call MasterDAO.ModifyScheduleOnMaster(Schedule temp)
+    * Move that logic from thermostat constructor to schedule constructor 
 * Modify thermostat model to include locality and address
+* Delete Schedule should delete assigned settings
 * Database error handling - IE do not allow removing schedule if assigned to a thermostat
 * Raspberry Pi GPIO integration
 * Automation Hub Backend
@@ -25,6 +27,8 @@ Info@brandtkeller.net
     * Have a separate jar for remote relay operation
     * all secondary thermostats are stateless
 * ARM architecture docker images
+* Automatic database cleanup
+* State lock on thermostat object main logic
 * Docker -> Postgres connection docker environment variables
 
 ## Possible Capabilities
@@ -46,6 +50,20 @@ Example: During the day-time, individual rooms are less populated while main liv
 ## Mutli-HVAC / Thermostat Configuration
 
 The system will be built to handle a mutli-hvac building. There will only be one Master Node with an API and database connection active. The 'Type' selector of the node table will identify an enrolled node as either 'control','airtemp','watertemp'. 
+
+## Start-up Logic - First Start
+* Master instance initialized
+    * Database instance Initialized
+        * Connects to database and creates Master Thermostat, a Schedule , and the Schedule Settings.
+    * Assign all (one) thermostats to Master Instance
+
+* Start REST API
+
+* Begin main runtime loop
+    * Master.executeThermostatCheck()
+        * For each thermostat
+            * 
+## Runtime Logic
 
 ## Main logic loop - Scaling
 

@@ -80,6 +80,13 @@ public class MasterDAO {
         mInstance.modifyThermostat(temp);
     }
 
+    public static boolean removeScheduleFromMaster(int id) {
+        if (mInstance == null) {
+            getMasterInstance();
+        }
+        return mInstance.removeSchedule(id);
+    }
+
     public static void modifyScheduleOnMaster(Schedule temp) {
         if (mInstance == null) {
             getMasterInstance();
@@ -87,11 +94,18 @@ public class MasterDAO {
         mInstance.modifySchedule(temp);
     }
 
-    public static boolean removeScheduleFromMaster(int id) {
+    public static void modifyScheduleOnMaster(int id) {
         if (mInstance == null) {
             getMasterInstance();
         }
-        return mInstance.removeSchedule(id);
+        mInstance.modifySchedule(id);
+    }
+    // The setting contoller will make changes to the setting in the database
+    // If successful, it will call this function.
+    // Using the scheduleId, we can create a new schedule Object
+    // 
+    public static void modifySettingOnMaster(int scheduleId) {
+
     }
     
     // Add functionality to update thermostat objects in-place

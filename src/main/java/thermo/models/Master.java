@@ -76,6 +76,20 @@ public class Master {
         } 
     }
 
+    public void modifySchedule(int id) {
+        ListIterator<Thermostat> itr = tList.listIterator();
+        while (itr.hasNext()) 
+        { 
+            Thermostat x = itr.next();
+            if (x.getScheduleId() == id) {
+                x.setSchedule(id);
+                // Instant response to change
+                x.executeTemperatureCheck();
+            }
+                
+        } 
+    }
+
     public void executeThermostatCheck() {
         for (Thermostat thermo : tList) {
             thermo.executeTemperatureCheck();

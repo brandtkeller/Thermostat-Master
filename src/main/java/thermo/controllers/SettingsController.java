@@ -58,7 +58,7 @@ public class SettingsController {
         Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         if (test.modifySetting(thermo)) {
-            MasterDAO.updateMaster();
+            MasterDAO.modifyScheduleOnMaster(thermo.getScheduleId());
             return new ResponseEntity<String>("{'data':[" + StringUtils.chop(thermo.toString()) + "]}", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Setting was not found", HttpStatus.NOT_FOUND);
@@ -75,7 +75,6 @@ public class SettingsController {
         }
 
         thermo.setId(id);
-        MasterDAO.updateMaster();
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
         .path("/{id}")
@@ -94,7 +93,6 @@ public class SettingsController {
         for (Setting temp : tList) {
             if (temp.getId() == Integer.parseInt(id)) {
                 if (test.removeThermostat(Integer.parseInt(id))) {
-                    MasterDAO.updateMaster();
                     return new ResponseEntity<String>("{'data':[]}", HttpStatus.NO_CONTENT);
                 } else {
                     return new ResponseEntity<String>("Problem Deleting the requested resource", HttpStatus.INTERNAL_SERVER_ERROR);

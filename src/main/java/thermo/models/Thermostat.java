@@ -100,6 +100,14 @@ public class Thermostat {
         this.schedule = schedule;
     }
 
+    public void setSchedule(int id) {
+        Pgdatabase db = MasterDAO.getDatabaseInstance();
+        Schedule schedule = db.getScheduleById(id);
+        schedule.setSettingList(db.getSettingsBySchedule(schedule.getId()));
+        schedule.getCurrentSetting();
+        this.schedule = schedule;
+    }
+
     public int getScheduleId() {
         return this.scheduleId;
     }
