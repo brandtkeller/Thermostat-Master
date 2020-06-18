@@ -16,8 +16,6 @@ public class Pgdatabase {
     private String user;
     private String password;
 
-    private static Pgdatabase pgdb = null;
-
     public Pgdatabase(String url, String user, String pass) {
         List<Thermostat> tList = new ArrayList<>();
 
@@ -72,11 +70,6 @@ public class Pgdatabase {
         }
     }
 
-
-    public static Pgdatabase getInstance() {
-        return pgdb;
-    }
-
     public void setUrl(String url) {
         this.url = "jdbc:postgresql://" + url;
     }
@@ -87,11 +80,6 @@ public class Pgdatabase {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public static void initializeDb(String url, String user, String password) {
-        System.out.println("Initializing database object");
-        pgdb = new Pgdatabase(url, user, password);
     }
 
     /* --------------- Function to connect to the database each time --------------- */
@@ -106,30 +94,6 @@ public class Pgdatabase {
             printSQLException(e);
         }
         return conn;
-    }
-
-    /* --------------- Thermostat Initialization ---------------*/
-
-    public List<Thermostat> init() {
-        List<Thermostat> tList = new ArrayList<>();
-        
-        tList = getAllThermostats();
-
-        for (Thermostat temp : tList) {
-            // Now get schedule by ID and assign to Thermostat
-            Schedule sched = getScheduleById(temp.getScheduleId());
-            if (sched == null) {
-                System.out.println("Failed to get schedule for thermostat");
-                // Do something here to handle
-            }
-            // Get length of the setting list and ensure there are 7
-            List<Setting> settings = getSettingsBySchedule(sched.getId());
-            sched.setSettingList(settings);
-            sched.getCurrentSetting();
-            temp.setSchedule(sched);
-            
-        }
-        return tList;
     }
 
     /* --------------- Thermostat Database functions --------------- */

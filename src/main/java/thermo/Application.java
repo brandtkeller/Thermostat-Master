@@ -5,27 +5,13 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import thermo.database.Pgdatabase;
 import thermo.models.Master;
 
 @SpringBootApplication
 public class Application {
 
     public static void main(String[] args) {
-        // Master will not work without associated DB, exit 1 if properties are not present
-        String db_url = System.getProperty("db_url");
-        String db_user = System.getProperty("db_user");
-        String db_pass = System.getProperty("db_pass");
-
-        if (db_url == null || db_user == null || db_pass == null) {
-            System.out.println("Not all command line elements present");
-            System.out.println("Expecting Format: java -jar -Ddb_url=<postgresurl:port/db> -Ddb_user=<db user> -Ddb_pass=<db password>  target/thermo-master-0.0.1.jar");
-            System.exit(1);
-        } else {
-            Pgdatabase.initializeDb(db_url, db_user, db_pass);
-        }
-
-
+        Master thermo = MasterDAO.getMasterInstance();
         SpringApplication.run(Application.class, args);
 
         // Allow the sprint boot application to initialize itself and the thermostatDAO instance
@@ -35,7 +21,7 @@ public class Application {
         catch (InterruptedException e) {
             
         }
-        Master thermo = MasterDAO.getMasterInstance();
+        
         // Handle keyboard interrupt gracefully
         Runtime.getRuntime().addShutdownHook(new Thread() 
         {

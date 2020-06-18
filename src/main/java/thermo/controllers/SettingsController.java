@@ -27,7 +27,7 @@ public class SettingsController {
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getSettings() {
         String response = "{'data':[";
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Setting> tList = test.getAllSettings();
 
@@ -43,7 +43,7 @@ public class SettingsController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> getSetting(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         Setting temp = test.getSettingById(Integer.parseInt(id));
 
         if (temp != null) {
@@ -55,10 +55,10 @@ public class SettingsController {
     
     @PutMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> putSetting(@PathVariable("id") String id, @RequestBody Setting thermo) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         if (test.modifySetting(thermo)) {
-            MasterDAO.updateMaster();
+            MasterDAO.modifyScheduleOnMaster(thermo.getScheduleId());
             return new ResponseEntity<String>("{'data':[" + StringUtils.chop(thermo.toString()) + "]}", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Setting was not found", HttpStatus.NOT_FOUND);
@@ -67,7 +67,7 @@ public class SettingsController {
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> addSetting(@RequestBody Setting thermo) {
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         int id = test.createSetting(thermo);
 
         if (id == -1) {
@@ -75,7 +75,6 @@ public class SettingsController {
         }
 
         thermo.setId(id);
-        MasterDAO.updateMaster();
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
         .path("/{id}")
@@ -87,14 +86,13 @@ public class SettingsController {
 
     @DeleteMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> deleteSetting(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Setting> tList = test.getAllSettings();
 
         for (Setting temp : tList) {
             if (temp.getId() == Integer.parseInt(id)) {
                 if (test.removeThermostat(Integer.parseInt(id))) {
-                    MasterDAO.updateMaster();
                     return new ResponseEntity<String>("{'data':[]}", HttpStatus.NO_CONTENT);
                 } else {
                     return new ResponseEntity<String>("Problem Deleting the requested resource", HttpStatus.INTERNAL_SERVER_ERROR);

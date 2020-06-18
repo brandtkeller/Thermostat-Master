@@ -20,8 +20,7 @@ public class GpioRunner {
     private Hashtable<Integer, Boolean> state_dict = new Hashtable<Integer, Boolean>();
 
 
-    public void initializeGPIO() {
-        // Add pre-configured pins to the initialization 
+    public GpioRunner() {
         pin_dict.put(1, RaspiPin.GPIO_00); // Fan relay
         pin_dict.put(2, RaspiPin.GPIO_02); // Heat relay
         pin_dict.put(3, RaspiPin.GPIO_03); // Cool relay

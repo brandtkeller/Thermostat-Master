@@ -2,14 +2,23 @@
 
 Main backend server for the Open Thermostat integration system
 
+## Update Notice
+This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
+Activity there may be more recent as updates are only pushed to github during merge to master.
+
+If you would like more information on updates, please reach out to:
+```
+Info@brandtkeller.net
+```
+
 ## TO DO
-* Add instance getters to masterDAO for db and gpio
-* Could thermostat have a 'fan' mode? 
-* When a thermostat object is updated (fan toggle), we are not updating in-place
-    * GPIO logic could be handled by a single instance of a model
-    * Thermostat logic needs to handle immutable state without knowing what happened prior or modify thermostat objects in place.
-* POST thermostat should have a masterDAO function for adding to the Master object
+* In-place updates
+    * POST /Schedules should create a schedule and all 7 settings
+    * schedule object should initialize a schedule with settings
+    * PUT /Settings/{id} should create schedule object and call MasterDAO.ModifyScheduleOnMaster(Schedule temp)
+    * Move that logic from thermostat constructor to schedule constructor 
 * Modify thermostat model to include locality and address
+* Delete Schedule should delete assigned settings
 * Database error handling - IE do not allow removing schedule if assigned to a thermostat
 * Raspberry Pi GPIO integration
 * Automation Hub Backend
@@ -18,16 +27,17 @@ Main backend server for the Open Thermostat integration system
     * Have a separate jar for remote relay operation
     * all secondary thermostats are stateless
 * ARM architecture docker images
+* Automatic database cleanup
+* State lock on thermostat object main logic
 * Docker -> Postgres connection docker environment variables
 
-## Updates
-This repository is a mirror. I host a private git server and CI/CD server that is currently active for all feature branches.
-Activity there may be more recent as updates are only pushed to github during merge to master.
+## Possible Capabilities
+* In-place updates for the thermostat objects
+    * This includes schedules and settings
+* Instant change
+    * If we toggle a setting on the UI, have the change reflected instantly rather than during the next schedule loop
+    * How does this logic work beside initial startup/ restart logic?
 
-If you would like more information on updates, please reach out to:
-```
-Info@brandtkeller.net
-```
 
 ## Standard Communication
 
@@ -40,6 +50,20 @@ Example: During the day-time, individual rooms are less populated while main liv
 ## Mutli-HVAC / Thermostat Configuration
 
 The system will be built to handle a mutli-hvac building. There will only be one Master Node with an API and database connection active. The 'Type' selector of the node table will identify an enrolled node as either 'control','airtemp','watertemp'. 
+
+## Start-up Logic - First Start
+* Master instance initialized
+    * Database instance Initialized
+        * Connects to database and creates Master Thermostat, a Schedule , and the Schedule Settings.
+    * Assign all (one) thermostats to Master Instance
+
+* Start REST API
+
+* Begin main runtime loop
+    * Master.executeThermostatCheck()
+        * For each thermostat
+            * 
+## Runtime Logic
 
 ## Main logic loop - Scaling
 

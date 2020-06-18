@@ -1,8 +1,7 @@
 package thermo.models;
 
+import thermo.MasterDAO;
 import thermo.database.Pgdatabase;
-
-import com.pi4j.wiringpi.Gpio;
 
 public class Thermostat {
     private int id;
@@ -34,6 +33,14 @@ public class Thermostat {
         this.mode = mode;
         // By default the state will be false. Need to have some pin cleanup
         this.state = false;
+        Pgdatabase db = MasterDAO.getDatabaseInstance();
+        Schedule sched = db.getScheduleById(id);
+        if (sched == null) {
+            System.out.println("Failed to get schedule for thermostat");
+        } else {
+            setSchedule(sched);
+        }
+        
     }
 
     // This should return the stringified version of the JSON API spec object for data
@@ -87,6 +94,17 @@ public class Thermostat {
     }
 
     public void setSchedule(Schedule schedule) {
+        Pgdatabase db = MasterDAO.getDatabaseInstance();
+        schedule.setSettingList(db.getSettingsBySchedule(schedule.getId()));
+        schedule.getCurrentSetting();
+        this.schedule = schedule;
+    }
+
+    public void setSchedule(int id) {
+        Pgdatabase db = MasterDAO.getDatabaseInstance();
+        Schedule schedule = db.getScheduleById(id);
+        schedule.setSettingList(db.getSettingsBySchedule(schedule.getId()));
+        schedule.getCurrentSetting();
         this.schedule = schedule;
     }
 
@@ -110,15 +128,13 @@ public class Thermostat {
     /* ---------- Main loop logic ---------- */
     public void executeTemperatureCheck() {
 
-        // If mode == 'off' - Do nothing
-
         if (this.mode != "Off") {
             int setTemp = schedule.getCurrentSettingTemp();
             System.out.println("Current set Temperature is: " + setTemp);
             
             // We now have the current set temperature
             // Compare against node mean temperature
-            Pgdatabase db = Pgdatabase.getInstance();
+            Pgdatabase db = MasterDAO.getDatabaseInstance();
             int meanTemp = db.getAllNodeTempsByThermostat(this.id);
             if (meanTemp == -1) {
                 System.out.println("No nodes with temperature updates to utilize.");
@@ -151,14 +167,16 @@ public class Thermostat {
             }
 
             if (this.mode == "Fan") {
-                // Turn on the fan?
+                // If mode is Fan, It should always be running
+                // During initial start-up, if last mode was Fan we start the fan relay
+                // 'Fan' and 'Off' are the only constant modes
+                // If we switch from heat/cool to fan, we should ensure the fan relay is on and the other relays are off.
+                // we will save the state of the GPIO pins in the instance of GPIO object
             }
         } else {
             System.out.println("Thermostat mode is set to off.");
-            // TODO: we need to deactivate any relays currently on. Can we simply call de-activate on non-running pins?
-            // Or do we need to create an object to maintain state?
+            // Ensure all relays are de-activated
         }
     }
-
     
 }

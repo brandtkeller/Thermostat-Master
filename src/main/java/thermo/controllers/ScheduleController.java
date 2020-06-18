@@ -27,7 +27,7 @@ public class ScheduleController {
     @GetMapping(path="", produces = "application/json")
     public ResponseEntity <String> getSchedules() {
         String response = "{'data':[";
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Schedule> tList = test.getAllSchedules();
 
@@ -43,7 +43,7 @@ public class ScheduleController {
 
     @GetMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> getSchedule(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         Schedule temp = test.getScheduleById(Integer.parseInt(id));
 
         if (temp != null) {
@@ -55,10 +55,10 @@ public class ScheduleController {
     
     @PutMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> putSchedule(@PathVariable("id") String id, @RequestBody Schedule thermo) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         if (test.modifySchedule(thermo)) {
-            MasterDAO.updateMaster();
+            MasterDAO.modifyScheduleOnMaster(thermo);
             return new ResponseEntity<String>("{'data':[" + StringUtils.chop(thermo.toString()) + "]}", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Schedule was not found", HttpStatus.NOT_FOUND);
@@ -67,7 +67,7 @@ public class ScheduleController {
 
     @PostMapping(path= "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> addSchedule(@RequestBody Schedule thermo) {
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
         int id = test.createSchedule(thermo);
 
         if (id == -1) {
@@ -75,7 +75,6 @@ public class ScheduleController {
         }
 
         thermo.setId(id);
-        MasterDAO.updateMaster();
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
         .path("/{id}")
@@ -87,17 +86,20 @@ public class ScheduleController {
 
     @DeleteMapping(path="/{id}", produces = "application/json")
     public ResponseEntity<String> deleteSchedule(@PathVariable("id") String id) { 
-        Pgdatabase test = Pgdatabase.getInstance();
+        Pgdatabase test = MasterDAO.getDatabaseInstance();
 
         List<Schedule> tList = test.getAllSchedules();
 
         for (Schedule temp : tList) {
             if (temp.getId() == Integer.parseInt(id)) {
-                if (test.removeThermostat(Integer.parseInt(id))) {
-                    MasterDAO.updateMaster();
-                    return new ResponseEntity<String>("{'data':[]}", HttpStatus.NO_CONTENT);
+                if (MasterDAO.removeScheduleFromMaster(Integer.parseInt(id))){
+                    if (test.removeSchedule(Integer.parseInt(id))) {
+                        return new ResponseEntity<String>("{'data':[]}", HttpStatus.NO_CONTENT);
+                    } else {
+                        return new ResponseEntity<String>("Problem Deleting the requested resource", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
                 } else {
-                    return new ResponseEntity<String>("Problem Deleting the requested resource", HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<String>("Schedule is assigned to thermostat, remove assignment before deleting", HttpStatus.BAD_REQUEST);
                 }
             }
         }
